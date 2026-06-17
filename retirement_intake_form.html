@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retirement Planning Intake Form</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --navy: #1E2761;
+    --gold: #C9A84C;
+    --gold-light: #f0e4c0;
+    --gold-pale: #fdf8ee;
+    --slate: #64748B;
+    --text: #1a2035;
+    --border: #d1d9e6;
+    --bg: #f7f8fc;
+    --white: #ffffff;
+    --green: #0D9488;
+    --section-bg: #eef1f8;
+    --red: #dc2626;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* ── PRINT STYLES ─────────────────────────────────────────────────── */
+  @media print {
+    body { background: white; font-size: 11px; }
+    .no-print { display: none !important; }
+    .page { box-shadow: none; margin: 0; border-radius: 0; max-width: 100%; }
+    .section { break-inside: avoid; }
+    .col-2 { break-inside: avoid; }
+    header { background: var(--navy) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .section-header { background: var(--section-bg) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    input, select, textarea {
+      border: none !important;
+      border-bottom: 1px solid #999 !important;
+      background: transparent !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .radio-group label, .checkbox-group label { font-size: 10px; }
+    .btn-bar { display: none; }
+  }
+
+  /* ── LAYOUT ──────────────────────────────────────────────────────── */
+  .page {
+    max-width: 960px;
+    margin: 24px auto;
+    background: var(--white);
+    box-shadow: 0 4px 32px rgba(30,39,97,0.10);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  /* ── HEADER ──────────────────────────────────────────────────────── */
+  header {
+    background: var(--navy);
+    color: white;
+    padding: 28px 36px 22px;
+    position: relative;
+  }
+  header .gold-rule {
+    height: 3px;
+    background: var(--gold);
+    width: 60px;
+    margin-bottom: 14px;
+    border-radius: 2px;
+  }
+  header h1 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+  header p {
+    font-size: 12px;
+    color: #a8b8d8;
+    font-weight: 400;
+  }
+  .header-badge {
+    position: absolute;
+    top: 28px;
+    right: 36px;
+    background: rgba(201,168,76,0.18);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  /* ── BUTTON BAR ──────────────────────────────────────────────────── */
+  .btn-bar {
+    background: var(--gold-pale);
+    border-bottom: 1px solid var(--gold-light);
+    padding: 12px 36px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn-bar span {
+    font-size: 11px;
+    color: var(--slate);
+    margin-right: 6px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: #2a3580; }
+  .btn-gold { background: var(--gold); color: white; }
+  .btn-gold:hover { background: #b8922e; }
+  .btn-outline { background: white; color: var(--navy); border: 1.5px solid var(--navy); }
+  .btn-outline:hover { background: var(--navy); color: white; }
+  .btn-green { background: var(--green); color: white; }
+  .btn-green:hover { background: #0a7a70; }
+
+  /* ── FORM BODY ───────────────────────────────────────────────────── */
+  .form-body { padding: 28px 36px 40px; }
+
+  /* ── SECTIONS ────────────────────────────────────────────────────── */
+  .section {
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .section-header {
+    background: var(--section-bg);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--navy);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.2px;
+  }
+  .section-subtitle {
+    font-size: 11px;
+    color: var(--slate);
+    margin-left: auto;
+  }
+  .section-content { padding: 18px; }
+
+  /* ── FIELD GRID ──────────────────────────────────────────────────── */
+  .grid { display: grid; gap: 14px 18px; }
+  .g1 { grid-template-columns: 1fr; }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 1fr 1fr 1fr; }
+  .g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .g2-1 { grid-template-columns: 2fr 1fr; }
+  .g1-2 { grid-template-columns: 1fr 2fr; }
+  .span2 { grid-column: span 2; }
+  .span3 { grid-column: span 3; }
+  .span4 { grid-column: span 4; }
+
+  /* ── FIELD ───────────────────────────────────────────────────────── */
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 5px;
+  }
+  .field label .req { color: var(--red); margin-left: 2px; }
+
+  input[type=text],
+  input[type=email],
+  input[type=tel],
+  input[type=number],
+  input[type=date],
+  select,
+  textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--white);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(30,39,97,0.08);
+  }
+  input[type=number] { text-align: right; }
+  textarea { resize: vertical; min-height: 70px; }
+  select { cursor: pointer; }
+
+  .prefix-wrap { position: relative; }
+  .prefix-wrap .prefix {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--slate);
+    font-size: 13px;
+    pointer-events: none;
+  }
+  .prefix-wrap input { padding-left: 22px; }
+
+  /* ── RADIO / CHECKBOX ────────────────────────────────────────────── */
+  .radio-group, .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .radio-group label, .checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+    padding: 5px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    transition: all 0.15s;
+    background: white;
+  }
+  .radio-group label:hover, .checkbox-group label:hover {
+    border-color: var(--navy);
+    background: var(--section-bg);
+  }
+  .radio-group input[type=radio],
+  .checkbox-group input[type=checkbox] {
+    width: auto;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    accent-color: var(--navy);
+  }
+
+  /* ── HIS / HERS COLUMNS ──────────────────────────────────────────── */
+  .his-hers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .his-col, .hers-col {
+    padding: 14px 16px;
+  }
+  .his-col { border-right: 1px solid var(--border); background: #f8faff; }
+  .hers-col { background: #fff8f8; }
+  .col-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .his-label { color: #1E2761; border-color: #1E2761; }
+  .hers-label { color: #9B2335; border-color: #9B2335; }
+  .col-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .his-dot { background: #1E2761; }
+  .hers-dot { background: #9B2335; }
+
+  /* ── SUBSECTION ──────────────────────────────────────────────────── */
+  .subsection {
+    background: var(--gold-pale);
+    border: 1px solid var(--gold-light);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 12px;
+  }
+  .subsection-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .subsection-title::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 1px;
+  }
+
+  /* ── DIVIDER ─────────────────────────────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  /* ── NOTES BOX ───────────────────────────────────────────────────── */
+  .notes-box {
+    background: #fffbf0;
+    border: 1px solid var(--gold-light);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--slate);
+    margin-bottom: 14px;
+  }
+
+  /* ── MARITAL STATUS TOGGLE ───────────────────────────────────────── */
+  #hers-section { transition: all 0.3s; }
+
+  /* ── TOAST ───────────────────────────────────────────────────────── */
+  #toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--navy);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    z-index: 9999;
+    pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── EMAIL MODAL ─────────────────────────────────────────────────── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 10px;
+    padding: 28px;
+    width: 420px;
+    max-width: 95vw;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal h3 {
+    font-family: 'Libre Baskerville', serif;
+    color: var(--navy);
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .modal p { font-size: 12px; color: var(--slate); margin-bottom: 18px; }
+  .modal .field { margin-bottom: 14px; }
+  .modal-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+
+  /* ── FOOTER ──────────────────────────────────────────────────────── */
+  footer {
+    background: var(--navy);
+    color: #a8b8d8;
+    font-size: 10px;
+    padding: 14px 36px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── RESPONSIVE ──────────────────────────────────────────────────── */
+  @media (max-width: 640px) {
+    .form-body { padding: 16px; }
+    .g2, .g3, .g4 { grid-template-columns: 1fr; }
+    .his-hers { grid-template-columns: 1fr; }
+    .his-col { border-right: none; border-bottom: 1px solid var(--border); }
+    .btn-bar { padding: 10px 16px; }
+    header { padding: 20px 16px; }
+    .header-badge { display: none; }
+  }
+
+  .field-note {
+    font-size: 10px;
+    color: var(--slate);
+    margin-top: 3px;
+    font-style: italic;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--section-bg);
+    color: var(--navy);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<div class="page" id="mainForm">
+
+  <!-- HEADER -->
+  <header>
+    <div class="gold-rule"></div>
+    <h1>Retirement Planning Intake</h1>
+    <p>Confidential Financial Information — Complete all applicable sections</p>
+    <div class="header-badge no-print">Client Intake</div>
+  </header>
+
+  <!-- BUTTON BAR -->
+  <div class="btn-bar no-print">
+    <span>Actions:</span>
+    <button class="btn btn-primary" onclick="saveToBrowser()">💾 Save Draft</button>
+    <button class="btn btn-outline" onclick="loadFromBrowser()">📂 Load Saved</button>
+    <button class="btn btn-gold" onclick="window.print()">🖨️ Print / Save PDF</button>
+    <button class="btn btn-green" onclick="openEmailModal()">✉️ Email Form</button>
+    <button class="btn btn-outline" onclick="clearForm()" style="margin-left:auto;color:#dc2626;border-color:#dc2626;">✕ Clear All</button>
+  </div>
+
+  <div class="form-body">
+
+    <!-- ① MARITAL STATUS & DATE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">①</div>
+        <div class="section-title">Client Information</div>
+        <div class="section-subtitle no-print">Start here</div>
+      </div>
+      <div class="section-content">
+        <div class="grid g3">
+          <div class="field">
+            <label>Date Completed</label>
+            <input type="date" id="formDate">
+          </div>
+          <div class="field">
+            <label>Prepared By / Advisor</label>
+            <input type="text" id="advisorName" placeholder="Advisor name">
+          </div>
+          <div class="field">
+            <label>Marital Status<span class="req">*</span></label>
+            <div class="radio-group">
+              <label><input type="radio" name="marital" value="single" onchange="toggleMarital(this)"> Single</label>
+              <label><input type="radio" name="marital" value="married" onchange="toggleMarital(this)" checked> Married</label>
+              <label><input type="radio" name="marital" value="widowed" onchange="toggleMarital(this)"> Widowed</label>
+              <label><input type="radio" name="marital" value="divorced" onchange="toggleMarital(this)"> Divorced</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="his-hers">
+          <!-- HIS -->
+          <div class="his-col">
+            <div class="col-label his-label"><span class="col-dot his-dot"></span> Client / Husband</div>
+            <div class="grid g1" style="gap:10px">
+              <div class="field">
+                <label>Full Name</label>
+                <input type="text" id="hisName" placeholder="First Last">
+              </div>
+              <div class="grid g2" style="gap:10px">
+                <div class="field">
+                  <label>Date of Birth</label>
+                  <input type="date" id="hisDOB">
+                </div>
+                <div class="field">
+                  <label>Age</label>
+                  <input type="number" id="hisAge" placeholder="0" min="0" max="120">
+                </div>
+              </div>
+              <div class="field">
+                <label>Phone</label>
+                <input type="tel" id="hisPhone" placeholder="(555) 000-0000">
+              </div>
+              <div class="field">
+                <label>Email</label>
+                <input type="email" id="hisEmail" placeholder="email@example.com">
+              </div>
+              <div class="field">
+                <label>Employment Status</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="hisEmploy" value="working"> Working</label>
+                  <label><input type="radio" name="hisEmploy" value="retired"> Retired</label>
+                  <label><input type="radio" name="hisEmploy" value="semi"> Semi-Retired</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Occupation / Employer</label>
+                <input type="text" id="hisOccupation" placeholder="Title or Company">
+              </div>
+              <div class="field">
+                <label>Anticipated Retirement Age</label>
+                <input type="number" id="hisRetireAge" placeholder="65">
+              </div>
+            </div>
+          </div>
+
+          <!-- HERS -->
+          <div class="hers-col" id="hers-section">
+            <div class="col-label hers-label"><span class="col-dot hers-dot"></span> Co-Client / Wife</div>
+            <div class="grid g1" style="gap:10px">
+              <div class="field">
+                <label>Full Name</label>
+                <input type="text" id="hersName" placeholder="First Last">
+              </div>
+              <div class="grid g2" style="gap:10px">
+                <div class="field">
+                  <label>Date of Birth</label>
+                  <input type="date" id="hersDOB">
+                </div>
+                <div class="field">
+                  <label>Age</label>
+                  <input type="number" id="hersAge" placeholder="0" min="0" max="120">
+                </div>
+              </div>
+              <div class="field">
+                <label>Phone</label>
+                <input type="tel" id="hersPhone" placeholder="(555) 000-0000">
+              </div>
+              <div class="field">
+                <label>Email</label>
+                <input type="email" id="hersEmail" placeholder="email@example.com">
+              </div>
+              <div class="field">
+                <label>Employment Status</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="hersEmploy" value="working"> Working</label>
+                  <label><input type="radio" name="hersEmploy" value="retired"> Retired</label>
+                  <label><input type="radio" name="hersEmploy" value="semi"> Semi-Retired</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Occupation / Employer</label>
+                <input type="text" id="hersOccupation" placeholder="Title or Company">
+              </div>
+              <div class="field">
+                <label>Anticipated Retirement Age</label>
+                <input type="number" id="hersRetireAge" placeholder="65">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② SOCIAL SECURITY -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">②</div>
+        <div class="section-title">Social Security</div>
+      </div>
+      <div class="section-content">
+        <div class="his-hers">
+          <!-- HIS SS -->
+          <div class="his-col">
+            <div class="col-label his-label"><span class="col-dot his-dot"></span> His Social Security</div>
+            <div class="grid g1" style="gap:10px">
+              <div class="field">
+                <label>Currently Collecting?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="hisSScollecting" value="yes"> Yes</label>
+                  <label><input type="radio" name="hisSScollecting" value="no"> Not Yet</label>
+                </div>
+              </div>
+              <div class="grid g2" style="gap:10px">
+                <div class="field">
+                  <label>Full Retirement Age (FRA)</label>
+                  <input type="text" id="hisFRA" placeholder="e.g. 67">
+                </div>
+                <div class="field">
+                  <label>FRA Benefit Amount</label>
+                  <div class="prefix-wrap">
+                    <span class="prefix">$</span>
+                    <input type="number" id="hisFRAamt" placeholder="0">
+                  </div>
+                </div>
+              </div>
+              <div class="grid g2" style="gap:10px">
+                <div class="field">
+                  <label>Current / Projected Monthly</label>
+                  <div class="prefix-wrap">
+                    <span class="prefix">$</span>
+                    <input type="number" id="hisSS" placeholder="0">
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Age Started / Planned Age</label>
+                  <input type="number" id="hisSSage" placeholder="62–70">
+                </div>
+              </div>
+              <div class="field">
+                <label>Strategy Preference</label>
+                <select id="hisSSstrategy">
+                  <option value="">— Select —</option>
+                  <option>Take early at 62</option>
+                  <option>Take at FRA</option>
+                  <option>Delay to 70 (max)</option>
+                  <option>Undecided</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- HERS SS -->
+          <div class="hers-col" id="hers-ss">
+            <div class="col-label hers-label"><span class="col-dot hers-dot"></span> Her Social Security</div>
+            <div class="grid g1" style="gap:10px">
+              <div class="field">
+                <label>Currently Collecting?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="hersSScollecting" value="yes"> Yes</label>
+                  <label><input type="radio" name="hersSScollecting" value="no"> Not Yet</label>
+                </div>
+              </div>
+              <div class="grid g2" style="gap:10px">
+                <div class="field">
+                  <label>Full Retirement Age (FRA)</label>
+                  <input type="text" id="hersFRA" placeholder="e.g. 67">
+                </div>
+                <div class="field">
+                  <label>FRA Benefit Amount</label>
+                  <div class="prefix-wrap">
+                    <span class="prefix">$</span>
+                    <input type="number" id="hersFRAamt" placeholder="0">
+                  </div>
+                </div>
+              </div>
+              <div class="grid g2" style="gap:10px">
+                <div class="field">
+                  <label>Current / Projected Monthly</label>
+                  <div class="prefix-wrap">
+                    <span class="prefix">$</span>
+                    <input type="number" id="hersSS" placeholder="0">
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Age Started / Planned Age</label>
+                  <input type="number" id="hersSSage" placeholder="62–70">
+                </div>
+              </div>
+              <div class="field">
+                <label>Strategy Preference</label>
+                <select id="hersSSstrategy">
+                  <option value="">— Select —</option>
+                  <option>Take early at 62</option>
+                  <option>Take at FRA</option>
+                  <option>Delay to 70 (max)</option>
+                  <option>Spousal Benefit</option>
+                  <option>Undecided</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ PENSION -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">③</div>
+        <div class="section-title">Pension / Defined Benefit</div>
+      </div>
+      <div class="section-content">
+        <div class="his-hers">
+          <!-- HIS PENSION -->
+          <div class="his-col">
+            <div class="col-label his-label"><span class="col-dot his-dot"></span> His Pension</div>
+            <div class="grid g1" style="gap:10px">
+              <div class="field">
+                <label>Has a Pension?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="hisPension" value="yes" onchange="toggleDiv('hisPensionDetail','yes',this)"> Yes</label>
+                  <label><input type="radio" name="hisPension" value="no" onchange="toggleDiv('hisPensionDetail','yes',this)" checked> No</label>
+                </div>
+              </div>
+              <div id="hisPensionDetail" style="display:none">
+                <div class="grid g1" style="gap:10px">
+                  <div class="field">
+                    <label>Employer / Plan Name</label>
+                    <input type="text" id="hisPensionName" placeholder="Employer or plan name">
+                  </div>
+                  <div class="grid g2" style="gap:10px">
+                    <div class="field">
+                      <label>Monthly Benefit</label>
+                      <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisPensionAmt" placeholder="0"></div>
+                    </div>
+                    <div class="field">
+                      <label>Start Age / Date</label>
+                      <input type="text" id="hisPensionStart" placeholder="Age or date">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>COLA Adjustment?</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="hisPensionCOLA" value="yes"> Yes</label>
+                      <label><input type="radio" name="hisPensionCOLA" value="no"> No</label>
+                      <label><input type="radio" name="hisPensionCOLA" value="partial"> Partial</label>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Payout Option</label>
+                    <select id="hisPensionOption">
+                      <option value="">— Select —</option>
+                      <option>Single Life Only</option>
+                      <option>Joint & 50% Survivor</option>
+                      <option>Joint & 100% Survivor</option>
+                      <option>10-Year Certain</option>
+                      <option>Lump Sum</option>
+                      <option>Undecided</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Currently Receiving?</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="hisPensionRec" value="yes"> Yes</label>
+                      <label><input type="radio" name="hisPensionRec" value="no"> Not Yet</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- HERS PENSION -->
+          <div class="hers-col" id="hers-pension">
+            <div class="col-label hers-label"><span class="col-dot hers-dot"></span> Her Pension</div>
+            <div class="grid g1" style="gap:10px">
+              <div class="field">
+                <label>Has a Pension?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="hersPension" value="yes" onchange="toggleDiv('hersPensionDetail','yes',this)"> Yes</label>
+                  <label><input type="radio" name="hersPension" value="no" onchange="toggleDiv('hersPensionDetail','yes',this)" checked> No</label>
+                </div>
+              </div>
+              <div id="hersPensionDetail" style="display:none">
+                <div class="grid g1" style="gap:10px">
+                  <div class="field">
+                    <label>Employer / Plan Name</label>
+                    <input type="text" id="hersPensionName" placeholder="Employer or plan name">
+                  </div>
+                  <div class="grid g2" style="gap:10px">
+                    <div class="field">
+                      <label>Monthly Benefit</label>
+                      <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersPensionAmt" placeholder="0"></div>
+                    </div>
+                    <div class="field">
+                      <label>Start Age / Date</label>
+                      <input type="text" id="hersPensionStart" placeholder="Age or date">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>COLA Adjustment?</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="hersPensionCOLA" value="yes"> Yes</label>
+                      <label><input type="radio" name="hersPensionCOLA" value="no"> No</label>
+                      <label><input type="radio" name="hersPensionCOLA" value="partial"> Partial</label>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Payout Option</label>
+                    <select id="hersPensionOption">
+                      <option value="">— Select —</option>
+                      <option>Single Life Only</option>
+                      <option>Joint & 50% Survivor</option>
+                      <option>Joint & 100% Survivor</option>
+                      <option>10-Year Certain</option>
+                      <option>Lump Sum</option>
+                      <option>Undecided</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Currently Receiving?</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="hersPensionRec" value="yes"> Yes</label>
+                      <label><input type="radio" name="hersPensionRec" value="no"> Not Yet</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ 401(k) / EMPLOYER PLANS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">④</div>
+        <div class="section-title">401(k) / Employer Retirement Plans</div>
+      </div>
+      <div class="section-content">
+        <div class="his-hers">
+          <!-- HIS 401k -->
+          <div class="his-col">
+            <div class="col-label his-label"><span class="col-dot his-dot"></span> His 401(k) / Employer Plan</div>
+            <div class="grid g1" style="gap:10px">
+              <div class="field">
+                <label>Plan Type</label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="his401kType" value="401k"> 401(k)</label>
+                  <label><input type="checkbox" name="his401kType" value="403b"> 403(b)</label>
+                  <label><input type="checkbox" name="his401kType" value="457"> 457</label>
+                  <label><input type="checkbox" name="his401kType" value="tsp"> TSP</label>
+                  <label><input type="checkbox" name="his401kType" value="sep"> SEP IRA</label>
+                  <label><input type="checkbox" name="his401kType" value="simple"> SIMPLE IRA</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Plan / Employer Name</label>
+                <input type="text" id="his401kName" placeholder="Plan or employer name">
+              </div>
+              <div class="field">
+                <label>Current Balance</label>
+                <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="his401kBalance" placeholder="0"></div>
+              </div>
+              <div class="field">
+                <label>Still Contributing?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="his401kContrib" value="yes" onchange="toggleDiv('his401kContribDetail','yes',this)"> Yes</label>
+                  <label><input type="radio" name="his401kContrib" value="no" onchange="toggleDiv('his401kContribDetail','yes',this)"> No</label>
+                </div>
+              </div>
+              <div id="his401kContribDetail" style="display:none">
+                <div class="subsection">
+                  <div class="subsection-title">Contribution Details</div>
+                  <div class="grid g1" style="gap:10px">
+                    <div class="grid g2" style="gap:10px">
+                      <div class="field">
+                        <label>Annual Contribution</label>
+                        <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="his401kContribAmt" placeholder="0"></div>
+                      </div>
+                      <div class="field">
+                        <label>Contribution Type</label>
+                        <select id="his401kContribType">
+                          <option value="">— Select —</option>
+                          <option>Pre-Tax (Traditional)</option>
+                          <option>Roth (After-Tax)</option>
+                          <option>Both</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label>Employer Match?</label>
+                      <div class="radio-group">
+                        <label><input type="radio" name="his401kMatch" value="yes" onchange="toggleDiv('his401kMatchDetail','yes',this)"> Yes</label>
+                        <label><input type="radio" name="his401kMatch" value="no" onchange="toggleDiv('his401kMatchDetail','yes',this)"> No</label>
+                      </div>
+                    </div>
+                    <div id="his401kMatchDetail" style="display:none">
+                      <div class="grid g2" style="gap:10px">
+                        <div class="field">
+                          <label>Match Percentage</label>
+                          <div class="prefix-wrap"><span class="prefix">%</span><input type="number" id="his401kMatchPct" placeholder="e.g. 50"></div>
+                        </div>
+                        <div class="field">
+                          <label>Up To (% of salary)</label>
+                          <div class="prefix-wrap"><span class="prefix">%</span><input type="number" id="his401kMatchMax" placeholder="e.g. 6"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Investment Allocation <span class="tag">Inside plan</span></label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="his401kAlloc" value="stocks"> Stocks</label>
+                  <label><input type="checkbox" name="his401kAlloc" value="bonds"> Bonds</label>
+                  <label><input type="checkbox" name="his401kAlloc" value="target"> Target Date Fund</label>
+                  <label><input type="checkbox" name="his401kAlloc" value="money"> Money Market</label>
+                  <label><input type="checkbox" name="his401kAlloc" value="stable"> Stable Value</label>
+                  <label><input type="checkbox" name="his401kAlloc" value="intl"> International</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Approximate Allocation</label>
+                <input type="text" id="his401kAllocDesc" placeholder="e.g. 70% stocks / 30% bonds">
+              </div>
+            </div>
+          </div>
+
+          <!-- HERS 401k -->
+          <div class="hers-col" id="hers-401k">
+            <div class="col-label hers-label"><span class="col-dot hers-dot"></span> Her 401(k) / Employer Plan</div>
+            <div class="grid g1" style="gap:10px">
+              <div class="field">
+                <label>Plan Type</label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="hers401kType" value="401k"> 401(k)</label>
+                  <label><input type="checkbox" name="hers401kType" value="403b"> 403(b)</label>
+                  <label><input type="checkbox" name="hers401kType" value="457"> 457</label>
+                  <label><input type="checkbox" name="hers401kType" value="tsp"> TSP</label>
+                  <label><input type="checkbox" name="hers401kType" value="sep"> SEP IRA</label>
+                  <label><input type="checkbox" name="hers401kType" value="simple"> SIMPLE IRA</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Plan / Employer Name</label>
+                <input type="text" id="hers401kName" placeholder="Plan or employer name">
+              </div>
+              <div class="field">
+                <label>Current Balance</label>
+                <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hers401kBalance" placeholder="0"></div>
+              </div>
+              <div class="field">
+                <label>Still Contributing?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="hers401kContrib" value="yes" onchange="toggleDiv('hers401kContribDetail','yes',this)"> Yes</label>
+                  <label><input type="radio" name="hers401kContrib" value="no" onchange="toggleDiv('hers401kContribDetail','yes',this)"> No</label>
+                </div>
+              </div>
+              <div id="hers401kContribDetail" style="display:none">
+                <div class="subsection">
+                  <div class="subsection-title">Contribution Details</div>
+                  <div class="grid g1" style="gap:10px">
+                    <div class="grid g2" style="gap:10px">
+                      <div class="field">
+                        <label>Annual Contribution</label>
+                        <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hers401kContribAmt" placeholder="0"></div>
+                      </div>
+                      <div class="field">
+                        <label>Contribution Type</label>
+                        <select id="hers401kContribType">
+                          <option value="">— Select —</option>
+                          <option>Pre-Tax (Traditional)</option>
+                          <option>Roth (After-Tax)</option>
+                          <option>Both</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label>Employer Match?</label>
+                      <div class="radio-group">
+                        <label><input type="radio" name="hers401kMatch" value="yes" onchange="toggleDiv('hers401kMatchDetail','yes',this)"> Yes</label>
+                        <label><input type="radio" name="hers401kMatch" value="no" onchange="toggleDiv('hers401kMatchDetail','yes',this)"> No</label>
+                      </div>
+                    </div>
+                    <div id="hers401kMatchDetail" style="display:none">
+                      <div class="grid g2" style="gap:10px">
+                        <div class="field">
+                          <label>Match Percentage</label>
+                          <div class="prefix-wrap"><span class="prefix">%</span><input type="number" id="hers401kMatchPct" placeholder="e.g. 50"></div>
+                        </div>
+                        <div class="field">
+                          <label>Up To (% of salary)</label>
+                          <div class="prefix-wrap"><span class="prefix">%</span><input type="number" id="hers401kMatchMax" placeholder="e.g. 6"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Investment Allocation <span class="tag">Inside plan</span></label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="hers401kAlloc" value="stocks"> Stocks</label>
+                  <label><input type="checkbox" name="hers401kAlloc" value="bonds"> Bonds</label>
+                  <label><input type="checkbox" name="hers401kAlloc" value="target"> Target Date Fund</label>
+                  <label><input type="checkbox" name="hers401kAlloc" value="money"> Money Market</label>
+                  <label><input type="checkbox" name="hers401kAlloc" value="stable"> Stable Value</label>
+                  <label><input type="checkbox" name="hers401kAlloc" value="intl"> International</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Approximate Allocation</label>
+                <input type="text" id="hers401kAllocDesc" placeholder="e.g. 70% stocks / 30% bonds">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ IRA ACCOUNTS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">⑤</div>
+        <div class="section-title">IRA Accounts — Qualified</div>
+      </div>
+      <div class="section-content">
+        <div class="his-hers">
+          <!-- HIS IRA -->
+          <div class="his-col">
+            <div class="col-label his-label"><span class="col-dot his-dot"></span> His IRAs</div>
+            <div class="grid g1" style="gap:12px">
+              <!-- Traditional IRA -->
+              <div class="subsection">
+                <div class="subsection-title">Traditional IRA</div>
+                <div class="grid g2" style="gap:8px">
+                  <div class="field">
+                    <label>Balance</label>
+                    <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisTraditionalIRA" placeholder="0"></div>
+                  </div>
+                  <div class="field">
+                    <label>Custodian</label>
+                    <input type="text" id="hisTraditionalIRACust" placeholder="Fidelity, Vanguard…">
+                  </div>
+                  <div class="field">
+                    <label>Contributing?</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="hisIRAcontrib" value="yes"> Yes</label>
+                      <label><input type="radio" name="hisIRAcontrib" value="no"> No</label>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Annual Amount</label>
+                    <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisIRAcontribAmt" placeholder="0"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Roth IRA -->
+              <div class="subsection">
+                <div class="subsection-title">Roth IRA</div>
+                <div class="grid g2" style="gap:8px">
+                  <div class="field">
+                    <label>Balance</label>
+                    <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisRothIRA" placeholder="0"></div>
+                  </div>
+                  <div class="field">
+                    <label>Custodian</label>
+                    <input type="text" id="hisRothIRACust" placeholder="Fidelity, Vanguard…">
+                  </div>
+                  <div class="field">
+                    <label>Contributing?</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="hisRothContrib" value="yes"> Yes</label>
+                      <label><input type="radio" name="hisRothContrib" value="no"> No</label>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Annual Amount</label>
+                    <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisRothContribAmt" placeholder="0"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Inherited IRA -->
+              <div class="subsection">
+                <div class="subsection-title">Inherited IRA</div>
+                <div class="grid g2" style="gap:8px">
+                  <div class="field">
+                    <label>Balance</label>
+                    <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisInheritedIRA" placeholder="0"></div>
+                  </div>
+                  <div class="field">
+                    <label>Original Owner</label>
+                    <input type="text" id="hisInheritedIRAOwner" placeholder="Relationship">
+                  </div>
+                  <div class="field span2">
+                    <label>RMD Started?</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="hisInheritedRMD" value="yes"> Yes</label>
+                      <label><input type="radio" name="hisInheritedRMD" value="no"> No</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Other Qualified -->
+              <div class="field">
+                <label>Other Qualified Accounts</label>
+                <textarea id="hisOtherQual" placeholder="Describe any other qualified accounts (rollover IRAs, profit sharing, etc.)"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- HERS IRA -->
+          <div class="hers-col" id="hers-ira">
+            <div class="col-label hers-label"><span class="col-dot hers-dot"></span> Her IRAs</div>
+            <div class="grid g1" style="gap:12px">
+              <!-- Traditional IRA -->
+              <div class="subsection">
+                <div class="subsection-title">Traditional IRA</div>
+                <div class="grid g2" style="gap:8px">
+                  <div class="field">
+                    <label>Balance</label>
+                    <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersTraditionalIRA" placeholder="0"></div>
+                  </div>
+                  <div class="field">
+                    <label>Custodian</label>
+                    <input type="text" id="hersTraditionalIRACust" placeholder="Fidelity, Vanguard…">
+                  </div>
+                  <div class="field">
+                    <label>Contributing?</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="hersIRAcontrib" value="yes"> Yes</label>
+                      <label><input type="radio" name="hersIRAcontrib" value="no"> No</label>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Annual Amount</label>
+                    <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersIRAcontribAmt" placeholder="0"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Roth IRA -->
+              <div class="subsection">
+                <div class="subsection-title">Roth IRA</div>
+                <div class="grid g2" style="gap:8px">
+                  <div class="field">
+                    <label>Balance</label>
+                    <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersRothIRA" placeholder="0"></div>
+                  </div>
+                  <div class="field">
+                    <label>Custodian</label>
+                    <input type="text" id="hersRothIRACust" placeholder="Fidelity, Vanguard…">
+                  </div>
+                  <div class="field">
+                    <label>Contributing?</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="hersRothContrib" value="yes"> Yes</label>
+                      <label><input type="radio" name="hersRothContrib" value="no"> No</label>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Annual Amount</label>
+                    <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersRothContribAmt" placeholder="0"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Inherited IRA -->
+              <div class="subsection">
+                <div class="subsection-title">Inherited IRA</div>
+                <div class="grid g2" style="gap:8px">
+                  <div class="field">
+                    <label>Balance</label>
+                    <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersInheritedIRA" placeholder="0"></div>
+                  </div>
+                  <div class="field">
+                    <label>Original Owner</label>
+                    <input type="text" id="hersInheritedIRAOwner" placeholder="Relationship">
+                  </div>
+                  <div class="field span2">
+                    <label>RMD Started?</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="hersInheritedRMD" value="yes"> Yes</label>
+                      <label><input type="radio" name="hersInheritedRMD" value="no"> No</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Other Qualified -->
+              <div class="field">
+                <label>Other Qualified Accounts</label>
+                <textarea id="hersOtherQual" placeholder="Describe any other qualified accounts"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑥ NON-QUALIFIED INVESTMENTS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">⑥</div>
+        <div class="section-title">Non-Qualified Investments &amp; Assets</div>
+      </div>
+      <div class="section-content">
+        <div class="notes-box no-print">💡 Non-qualified = after-tax dollars. Capital gains rules apply. Include joint accounts, individual brokerage, savings, CDs, annuities, life insurance CSV.</div>
+
+        <!-- JOINT / COMBINED SECTION -->
+        <div class="subsection" style="background:#f0f4ff;border-color:#c0cef0;margin-top:0;margin-bottom:16px">
+          <div class="subsection-title" style="color:var(--navy)">Joint / Combined Accounts</div>
+          <div class="grid g3" style="gap:10px">
+            <div class="field">
+              <label>Bank / Savings Accounts</label>
+              <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="jointSavings" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label>Money Market / CDs</label>
+              <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="jointMM" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label>Joint Brokerage</label>
+              <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="jointBrokerage" placeholder="0"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="his-hers">
+          <!-- HIS NON-QUAL -->
+          <div class="his-col">
+            <div class="col-label his-label"><span class="col-dot his-dot"></span> His Non-Qualified</div>
+            <div class="grid g1" style="gap:10px">
+              <div class="field">
+                <label>Account Types</label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="hisNQtype" value="brokerage"> Brokerage</label>
+                  <label><input type="checkbox" name="hisNQtype" value="annuity"> Annuity (NQ)</label>
+                  <label><input type="checkbox" name="hisNQtype" value="lifeCSV"> Life Ins. CSV</label>
+                  <label><input type="checkbox" name="hisNQtype" value="savings"> Savings</label>
+                  <label><input type="checkbox" name="hisNQtype" value="cd"> CDs</label>
+                  <label><input type="checkbox" name="hisNQtype" value="realestate"> Real Estate</label>
+                  <label><input type="checkbox" name="hisNQtype" value="business"> Business</label>
+                </div>
+              </div>
+              <div class="grid g2" style="gap:8px">
+                <div class="field">
+                  <label>Brokerage Balance</label>
+                  <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisBrokerage" placeholder="0"></div>
+                </div>
+                <div class="field">
+                  <label>Annuity (NQ) Balance</label>
+                  <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisNQAnnuity" placeholder="0"></div>
+                </div>
+                <div class="field">
+                  <label>Life Insurance CSV</label>
+                  <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisLifeCSV" placeholder="0"></div>
+                </div>
+                <div class="field">
+                  <label>Other Non-Qual</label>
+                  <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisOtherNQ" placeholder="0"></div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Investment Types</label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="hisInvType" value="stocks"> Individual Stocks</label>
+                  <label><input type="checkbox" name="hisInvType" value="bonds"> Bonds</label>
+                  <label><input type="checkbox" name="hisInvType" value="mutualfunds"> Mutual Funds</label>
+                  <label><input type="checkbox" name="hisInvType" value="etf"> ETFs</label>
+                  <label><input type="checkbox" name="hisInvType" value="reits"> REITs</label>
+                  <label><input type="checkbox" name="hisInvType" value="alternatives"> Alternatives</label>
+                  <label><input type="checkbox" name="hisInvType" value="fixedannuity"> Fixed Annuity</label>
+                  <label><input type="checkbox" name="hisInvType" value="fia"> Fixed Index Annuity</label>
+                  <label><input type="checkbox" name="hisInvType" value="va"> Variable Annuity</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Notes / Custodians</label>
+                <textarea id="hisNQnotes" placeholder="Custodian names, account notes…"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- HERS NON-QUAL -->
+          <div class="hers-col" id="hers-nq">
+            <div class="col-label hers-label"><span class="col-dot hers-dot"></span> Her Non-Qualified</div>
+            <div class="grid g1" style="gap:10px">
+              <div class="field">
+                <label>Account Types</label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="hersNQtype" value="brokerage"> Brokerage</label>
+                  <label><input type="checkbox" name="hersNQtype" value="annuity"> Annuity (NQ)</label>
+                  <label><input type="checkbox" name="hersNQtype" value="lifeCSV"> Life Ins. CSV</label>
+                  <label><input type="checkbox" name="hersNQtype" value="savings"> Savings</label>
+                  <label><input type="checkbox" name="hersNQtype" value="cd"> CDs</label>
+                  <label><input type="checkbox" name="hersNQtype" value="realestate"> Real Estate</label>
+                  <label><input type="checkbox" name="hersNQtype" value="business"> Business</label>
+                </div>
+              </div>
+              <div class="grid g2" style="gap:8px">
+                <div class="field">
+                  <label>Brokerage Balance</label>
+                  <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersBrokerage" placeholder="0"></div>
+                </div>
+                <div class="field">
+                  <label>Annuity (NQ) Balance</label>
+                  <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersNQAnnuity" placeholder="0"></div>
+                </div>
+                <div class="field">
+                  <label>Life Insurance CSV</label>
+                  <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersLifeCSV" placeholder="0"></div>
+                </div>
+                <div class="field">
+                  <label>Other Non-Qual</label>
+                  <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersOtherNQ" placeholder="0"></div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Investment Types</label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="hersInvType" value="stocks"> Individual Stocks</label>
+                  <label><input type="checkbox" name="hersInvType" value="bonds"> Bonds</label>
+                  <label><input type="checkbox" name="hersInvType" value="mutualfunds"> Mutual Funds</label>
+                  <label><input type="checkbox" name="hersInvType" value="etf"> ETFs</label>
+                  <label><input type="checkbox" name="hersInvType" value="reits"> REITs</label>
+                  <label><input type="checkbox" name="hersInvType" value="alternatives"> Alternatives</label>
+                  <label><input type="checkbox" name="hersInvType" value="fixedannuity"> Fixed Annuity</label>
+                  <label><input type="checkbox" name="hersInvType" value="fia"> Fixed Index Annuity</label>
+                  <label><input type="checkbox" name="hersInvType" value="va"> Variable Annuity</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Notes / Custodians</label>
+                <textarea id="hersNQnotes" placeholder="Custodian names, account notes…"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑦ INCOME NEEDS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">⑦</div>
+        <div class="section-title">Retirement Income Needs</div>
+      </div>
+      <div class="section-content">
+        <div class="grid g3">
+          <div class="field">
+            <label>Monthly Income Needed (Today)</label>
+            <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="incomeNeeded" placeholder="0"></div>
+          </div>
+          <div class="field">
+            <label>Monthly Income Needed (In Retirement)</label>
+            <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="incomeRetirement" placeholder="0"></div>
+          </div>
+          <div class="field">
+            <label>Income Shortfall / Gap</label>
+            <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="incomeGap" placeholder="0"></div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid g3">
+          <div class="field">
+            <label>Current Gross Annual Income (His)</label>
+            <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hisIncome" placeholder="0"></div>
+          </div>
+          <div class="field">
+            <label>Current Gross Annual Income (Hers)</label>
+            <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="hersIncome" placeholder="0"></div>
+          </div>
+          <div class="field">
+            <label>Other Household Income</label>
+            <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="otherIncome" placeholder="0"></div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid g2">
+          <div class="field">
+            <label>Other Income Sources</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="otherIncomeType" value="rental"> Rental Income</label>
+              <label><input type="checkbox" name="otherIncomeType" value="parttime"> Part-Time Work</label>
+              <label><input type="checkbox" name="otherIncomeType" value="business"> Business Income</label>
+              <label><input type="checkbox" name="otherIncomeType" value="inheritance"> Inheritance</label>
+              <label><input type="checkbox" name="otherIncomeType" value="dividends"> Dividends</label>
+              <label><input type="checkbox" name="otherIncomeType" value="trust"> Trust / Estate</label>
+              <label><input type="checkbox" name="otherIncomeType" value="annuityincome"> Annuity Income</label>
+              <label><input type="checkbox" name="otherIncomeType" value="other"> Other</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Estimated Annual Expenses in Retirement</label>
+            <div class="prefix-wrap"><span class="prefix">$</span><input type="number" id="retirementExpenses" placeholder="0"></div>
+            <div class="field-note">Include housing, healthcare, travel, leisure</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid g2">
+          <div class="field">
+            <label>Inflation Rate Assumption</label>
+            <select id="inflationRate">
+              <option value="">— Select —</option>
+              <option>2%</option>
+              <option>3%</option>
+              <option>4%</option>
+              <option>Custom</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Planning Horizon (To Age)</label>
+            <input type="number" id="planningHorizon" placeholder="e.g. 90 or 95">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑧ RISK TOLERANCE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">⑧</div>
+        <div class="section-title">Risk Tolerance &amp; Goals</div>
+      </div>
+      <div class="section-content">
+        <div class="his-hers">
+          <div class="his-col">
+            <div class="col-label his-label"><span class="col-dot his-dot"></span> His Risk Tolerance</div>
+            <div class="field">
+              <label>Risk Profile</label>
+              <div class="radio-group" style="flex-direction:column;gap:6px">
+                <label><input type="radio" name="hisRisk" value="conservative"> 🟢 Conservative — Safety first, minimal loss tolerance</label>
+                <label><input type="radio" name="hisRisk" value="mod-cons"> 🔵 Moderately Conservative — Mostly stable, some growth</label>
+                <label><input type="radio" name="hisRisk" value="moderate"> 🟡 Moderate — Balanced growth and stability</label>
+                <label><input type="radio" name="hisRisk" value="mod-agg"> 🟠 Moderately Aggressive — Growth-oriented, some volatility OK</label>
+                <label><input type="radio" name="hisRisk" value="aggressive"> 🔴 Aggressive — Maximum growth, high volatility acceptable</label>
+              </div>
+            </div>
+            <div class="field" style="margin-top:10px">
+              <label>Biggest Fear</label>
+              <div class="radio-group" style="flex-direction:column;gap:5px">
+                <label><input type="radio" name="hisFear" value="outlive"> Outliving my money</label>
+                <label><input type="radio" name="hisFear" value="market"> A major market loss</label>
+                <label><input type="radio" name="hisFear" value="health"> Healthcare / long-term care costs</label>
+                <label><input type="radio" name="hisFear" value="inflation"> Inflation eroding purchasing power</label>
+                <label><input type="radio" name="hisFear" value="tax"> Rising taxes</label>
+              </div>
+            </div>
+          </div>
+          <div class="hers-col" id="hers-risk">
+            <div class="col-label hers-label"><span class="col-dot hers-dot"></span> Her Risk Tolerance</div>
+            <div class="field">
+              <label>Risk Profile</label>
+              <div class="radio-group" style="flex-direction:column;gap:6px">
+                <label><input type="radio" name="hersRisk" value="conservative"> 🟢 Conservative — Safety first, minimal loss tolerance</label>
+                <label><input type="radio" name="hersRisk" value="mod-cons"> 🔵 Moderately Conservative — Mostly stable, some growth</label>
+                <label><input type="radio" name="hersRisk" value="moderate"> 🟡 Moderate — Balanced growth and stability</label>
+                <label><input type="radio" name="hersRisk" value="mod-agg"> 🟠 Moderately Aggressive — Growth-oriented, some volatility OK</label>
+                <label><input type="radio" name="hersRisk" value="aggressive"> 🔴 Aggressive — Maximum growth, high volatility acceptable</label>
+              </div>
+            </div>
+            <div class="field" style="margin-top:10px">
+              <label>Biggest Fear</label>
+              <div class="radio-group" style="flex-direction:column;gap:5px">
+                <label><input type="radio" name="hersFear" value="outlive"> Outliving my money</label>
+                <label><input type="radio" name="hersFear" value="market"> A major market loss</label>
+                <label><input type="radio" name="hersFear" value="health"> Healthcare / long-term care costs</label>
+                <label><input type="radio" name="hersFear" value="inflation"> Inflation eroding purchasing power</label>
+                <label><input type="radio" name="hersFear" value="tax"> Rising taxes</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid g2">
+          <div class="field">
+            <label>Primary Retirement Goals</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="goals" value="income"> Guaranteed income</label>
+              <label><input type="checkbox" name="goals" value="growth"> Portfolio growth</label>
+              <label><input type="checkbox" name="goals" value="legacy"> Leave a legacy</label>
+              <label><input type="checkbox" name="goals" value="ltc"> Long-term care protection</label>
+              <label><input type="checkbox" name="goals" value="tax"> Tax reduction</label>
+              <label><input type="checkbox" name="goals" value="travel"> Travel / lifestyle</label>
+              <label><input type="checkbox" name="goals" value="charity"> Charitable giving</label>
+              <label><input type="checkbox" name="goals" value="education"> Education funding</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Legacy / Estate Priority</label>
+            <div class="radio-group" style="flex-direction:column;gap:5px">
+              <label><input type="radio" name="legacy" value="primary"> Primary goal — leave as much as possible</label>
+              <label><input type="radio" name="legacy" value="secondary"> Secondary — nice to have if possible</label>
+              <label><input type="radio" name="legacy" value="afterthought"> Afterthought — spend it all, whatever's left is fine</label>
+              <label><input type="radio" name="legacy" value="none"> Not important</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑨ ADDITIONAL NOTES -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">⑨</div>
+        <div class="section-title">Additional Notes &amp; Special Circumstances</div>
+      </div>
+      <div class="section-content">
+        <div class="grid g2">
+          <div class="field">
+            <label>Health Considerations</label>
+            <textarea id="healthNotes" placeholder="Any health issues, long-term care needs, disability, medications affecting planning…"></textarea>
+          </div>
+          <div class="field">
+            <label>Estate / Legal Documents in Place</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="estate" value="will"> Will</label>
+              <label><input type="checkbox" name="estate" value="trust"> Trust</label>
+              <label><input type="checkbox" name="estate" value="poa"> Power of Attorney</label>
+              <label><input type="checkbox" name="estate" value="hcpoa"> Healthcare POA</label>
+              <label><input type="checkbox" name="estate" value="directive"> Living Will / Directive</label>
+              <label><input type="checkbox" name="estate" value="ben"> Beneficiaries Updated</label>
+            </div>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px">
+          <label>General Notes / Advisor Comments</label>
+          <textarea id="generalNotes" style="min-height:100px" placeholder="Key observations, client concerns, follow-up items, special circumstances…"></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end form-body -->
+
+  <footer>
+    CONFIDENTIAL — For Planning Purposes Only. This form does not constitute investment, legal, or tax advice. &nbsp;|&nbsp; © 2026 Retirement Planning Intake Form
+  </footer>
+</div><!-- end page -->
+
+<!-- EMAIL MODAL -->
+<div class="modal-overlay no-print" id="emailModal">
+  <div class="modal">
+    <h3>Send Form by Email</h3>
+    <p>This will open your email client with a summary of the completed form attached as text. For a full PDF, use Print / Save PDF first, then attach manually.</p>
+    <div class="field">
+      <label>Recipient Email</label>
+      <input type="email" id="emailTo" placeholder="advisor@example.com">
+    </div>
+    <div class="field">
+      <label>Your Name (From)</label>
+      <input type="text" id="emailFrom" placeholder="Client name">
+    </div>
+    <div class="field">
+      <label>Subject Line</label>
+      <input type="text" id="emailSubject" value="Retirement Planning Intake Form — Completed">
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeEmailModal()">Cancel</button>
+      <button class="btn btn-green" onclick="sendEmail()">Open Email Client ✉️</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ── MARITAL STATUS TOGGLE ─────────────────────────────────────────────────────
+function toggleMarital(radio) {
+  const hers = ['hers-section','hers-ss','hers-pension','hers-401k','hers-ira','hers-nq','hers-risk'];
+  const show = radio.value === 'married';
+  hers.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = show ? '' : 'none';
+  });
+}
+
+// ── CONDITIONAL SHOW/HIDE ─────────────────────────────────────────────────────
+function toggleDiv(divId, showValue, radio) {
+  const el = document.getElementById(divId);
+  if (!el) return;
+  el.style.display = radio.value === showValue ? 'block' : 'none';
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function showToast(msg, duration = 3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ── COLLECT FORM DATA ─────────────────────────────────────────────────────────
+function collectFormData() {
+  const data = {};
+  // Text / number inputs
+  document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
+    data[el.id] = el.value;
+  });
+  // Radio buttons
+  document.querySelectorAll('input[type=radio]:checked').forEach(el => {
+    data['radio_' + el.name] = el.value;
+  });
+  // Checkboxes
+  const cbGroups = {};
+  document.querySelectorAll('input[type=checkbox]').forEach(el => {
+    if (!cbGroups[el.name]) cbGroups[el.name] = [];
+    if (el.checked) cbGroups[el.name].push(el.value);
+  });
+  Object.assign(data, cbGroups);
+  return data;
+}
+
+// ── RESTORE FORM DATA ─────────────────────────────────────────────────────────
+function restoreFormData(data) {
+  Object.entries(data).forEach(([key, val]) => {
+    if (key.startsWith('radio_')) {
+      const name = key.replace('radio_', '');
+      const el = document.querySelector(`input[type=radio][name="${name}"][value="${val}"]`);
+      if (el) { el.checked = true; el.dispatchEvent(new Event('change')); }
+    } else if (Array.isArray(val)) {
+      val.forEach(v => {
+        const el = document.querySelector(`input[type=checkbox][name="${key}"][value="${v}"]`);
+        if (el) el.checked = true;
+      });
+    } else {
+      const el = document.getElementById(key);
+      if (el) el.value = val;
+    }
+  });
+}
+
+// ── SAVE TO BROWSER (localStorage) ───────────────────────────────────────────
+function saveToBrowser() {
+  try {
+    const data = collectFormData();
+    localStorage.setItem('retirementIntakeForm', JSON.stringify(data));
+    showToast('✅ Draft saved successfully!');
+  } catch (e) {
+    showToast('⚠️ Could not save — storage may be unavailable.');
+  }
+}
+
+// ── LOAD FROM BROWSER ─────────────────────────────────────────────────────────
+function loadFromBrowser() {
+  try {
+    const raw = localStorage.getItem('retirementIntakeForm');
+    if (!raw) { showToast('ℹ️ No saved draft found.'); return; }
+    restoreFormData(JSON.parse(raw));
+    showToast('📂 Draft loaded successfully!');
+  } catch (e) {
+    showToast('⚠️ Could not load saved data.');
+  }
+}
+
+// ── CLEAR FORM ────────────────────────────────────────────────────────────────
+function clearForm() {
+  if (!confirm('Clear all form data? This cannot be undone.')) return;
+  document.querySelectorAll('input[id]').forEach(el => {
+    if (el.type === 'radio' || el.type === 'checkbox') el.checked = false;
+    else el.value = '';
+  });
+  document.querySelectorAll('select[id], textarea[id]').forEach(el => el.value = '');
+  showToast('🗑️ Form cleared.');
+}
+
+// ── EMAIL MODAL ───────────────────────────────────────────────────────────────
+function openEmailModal() {
+  document.getElementById('emailModal').classList.add('open');
+}
+function closeEmailModal() {
+  document.getElementById('emailModal').classList.remove('open');
+}
+
+function sendEmail() {
+  const to = document.getElementById('emailTo').value.trim();
+  const from = document.getElementById('emailFrom').value.trim();
+  const subject = document.getElementById('emailSubject').value.trim();
+
+  if (!to) { showToast('⚠️ Please enter a recipient email.'); return; }
+
+  // Build summary text
+  const data = collectFormData();
+  const hisName = data.hisName || 'Client';
+  const hersName = data.hersName || 'Co-Client';
+  const marital = data['radio_marital'] || 'Not specified';
+
+  let body = `RETIREMENT PLANNING INTAKE FORM\n`;
+  body += `Submitted by: ${from || 'Client'}\n`;
+  body += `Date: ${data.formDate || new Date().toLocaleDateString()}\n`;
+  body += `Advisor: ${data.advisorName || 'N/A'}\n\n`;
+  body += `--- CLIENT INFORMATION ---\n`;
+  body += `Marital Status: ${marital}\n`;
+  body += `Client: ${hisName} | Age: ${data.hisAge || ''} | DOB: ${data.hisDOB || ''}\n`;
+  body += `Email: ${data.hisEmail || ''} | Phone: ${data.hisPhone || ''}\n`;
+  body += `Employment: ${data['radio_hisEmploy'] || ''} | Occupation: ${data.hisOccupation || ''}\n\n`;
+  if (marital === 'married') {
+    body += `Co-Client: ${hersName} | Age: ${data.hersAge || ''} | DOB: ${data.hersDOB || ''}\n`;
+    body += `Email: ${data.hersEmail || ''} | Phone: ${data.hersPhone || ''}\n`;
+    body += `Employment: ${data['radio_hersEmploy'] || ''} | Occupation: ${data.hersOccupation || ''}\n\n`;
+  }
+  body += `--- SOCIAL SECURITY ---\n`;
+  body += `His SS: $${data.hisSS || '0'}/mo | FRA: ${data.hisFRA || ''} | FRA Amount: $${data.hisFRAamt || '0'}\n`;
+  body += `Collecting: ${data['radio_hisSScollecting'] || ''} | Strategy: ${data.hisSSstrategy || ''}\n`;
+  if (marital === 'married') {
+    body += `Her SS: $${data.hersSS || '0'}/mo | FRA: ${data.hersFRA || ''} | FRA Amount: $${data.hersFRAamt || '0'}\n`;
+    body += `Collecting: ${data['radio_hersSScollecting'] || ''} | Strategy: ${data.hersSSstrategy || ''}\n`;
+  }
+  body += `\n--- 401(k) BALANCES ---\n`;
+  body += `His 401(k): $${data.his401kBalance || '0'} — ${data.his401kName || ''}\n`;
+  body += `Her 401(k): $${data.hers401kBalance || '0'} — ${data.hers401kName || ''}\n`;
+  body += `\n--- IRA BALANCES ---\n`;
+  body += `His Traditional IRA: $${data.hisTraditionalIRA || '0'} | Roth: $${data.hisRothIRA || '0'} | Inherited: $${data.hisInheritedIRA || '0'}\n`;
+  body += `Her Traditional IRA: $${data.hersTraditionalIRA || '0'} | Roth: $${data.hersRothIRA || '0'} | Inherited: $${data.hersInheritedIRA || '0'}\n`;
+  body += `\n--- NON-QUALIFIED ASSETS ---\n`;
+  body += `Joint Savings: $${data.jointSavings || '0'} | MM/CDs: $${data.jointMM || '0'} | Joint Brokerage: $${data.jointBrokerage || '0'}\n`;
+  body += `His Brokerage: $${data.hisBrokerage || '0'} | His NQ Annuity: $${data.hisNQAnnuity || '0'} | His Life CSV: $${data.hisLifeCSV || '0'}\n`;
+  body += `Her Brokerage: $${data.hersBrokerage || '0'} | Her NQ Annuity: $${data.hersNQAnnuity || '0'} | Her Life CSV: $${data.hersLifeCSV || '0'}\n`;
+  body += `\n--- INCOME NEEDS ---\n`;
+  body += `Monthly Need (Today): $${data.incomeNeeded || '0'} | In Retirement: $${data.incomeRetirement || '0'}\n`;
+  body += `His Annual Income: $${data.hisIncome || '0'} | Her Annual Income: $${data.hersIncome || '0'}\n`;
+  body += `Planning Horizon: To age ${data.planningHorizon || ''}\n`;
+  body += `\n--- NOTES ---\n`;
+  body += `${data.generalNotes || 'None'}\n`;
+  body += `\n— End of Intake Summary —\nThis is an auto-generated summary. Please request the full PDF for complete details.\n`;
+
+  const mailtoLink = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailtoLink;
+  closeEmailModal();
+  showToast('✉️ Opening email client…');
+}
+
+// ── AUTO-SAVE ON CHANGE ───────────────────────────────────────────────────────
+let autoSaveTimer;
+document.addEventListener('input', () => {
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => {
+    try {
+      const data = collectFormData();
+      localStorage.setItem('retirementIntakeForm_auto', JSON.stringify(data));
+    } catch(e) {}
+  }, 2000);
+});
+
+// ── SET TODAY'S DATE ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const d = document.getElementById('formDate');
+  if (d && !d.value) d.value = new Date().toISOString().split('T')[0];
+
+  // Check for auto-saved data
+  try {
+    const auto = localStorage.getItem('retirementIntakeForm_auto');
+    if (auto) {
+      const data = JSON.parse(auto);
+      if (data.hisName || data.hersName) {
+        if (confirm('A previously started form was found. Would you like to restore it?')) {
+          restoreFormData(data);
+        }
+      }
+    }
+  } catch(e) {}
+});
+</script>
+
+</body>
+</html>
