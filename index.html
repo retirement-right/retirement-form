@@ -471,12 +471,15 @@
 
   <!-- BUTTON BAR -->
   <div class="btn-bar no-print">
-    <span>Actions:</span>
-    <button class="btn btn-primary" onclick="saveToBrowser()">💾 Save Draft</button>
-    <button class="btn btn-outline" onclick="loadFromBrowser()">📂 Load Saved</button>
-    <button class="btn btn-gold" onclick="window.print()">🖨️ Print / Save PDF</button>
-    <button class="btn btn-green" onclick="openEmailModal()">✉️ Email Form</button>
-    <button class="btn btn-outline" onclick="clearForm()" style="margin-left:auto;color:#dc2626;border-color:#dc2626;">✕ Clear All</button>
+    <div style="display:flex;flex-direction:column;gap:2px;margin-right:8px">
+      <button class="btn btn-primary" style="font-size:13px;padding:10px 24px" onclick="saveToComputer()">💾 Save to My Computer</button>
+      <div style="font-size:10px;color:#888;text-align:center;margin-top:2px">Saves a file to your Downloads folder</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;margin-right:8px">
+      <button class="btn btn-green" style="font-size:13px;padding:10px 24px" onclick="openEmailModal()">✉️ Email This Form</button>
+      <div style="font-size:10px;color:#888;text-align:center;margin-top:2px">Opens your email with form summary</div>
+    </div>
+    <button class="btn btn-outline" onclick="clearForm()" style="margin-left:auto;align-self:flex-start;color:#dc2626;border-color:#dc2626;">✕ Start Over</button>
   </div>
 
   <div class="form-body">
@@ -1653,38 +1656,51 @@ function restoreFormData(data) {
   });
 }
 
-// ── SAVE TO BROWSER (localStorage) ───────────────────────────────────────────
-function saveToBrowser() {
-  try {
-    const data = collectFormData();
-    localStorage.setItem('retirementIntakeForm', JSON.stringify(data));
-    showToast('✅ Draft saved successfully!');
-  } catch (e) {
-    showToast('⚠️ Could not save — storage may be unavailable.');
-  }
-}
+// ── SAVE TO COMPUTER (downloads an HTML file with data pre-filled) ───────────
+function saveToComputer() {
+  const data = collectFormData();
+  // Build a self-contained HTML snapshot with all values baked in
+  let snapshot = document.documentElement.outerHTML;
 
-// ── LOAD FROM BROWSER ─────────────────────────────────────────────────────────
-function loadFromBrowser() {
-  try {
-    const raw = localStorage.getItem('retirementIntakeForm');
-    if (!raw) { showToast('ℹ️ No saved draft found.'); return; }
-    restoreFormData(JSON.parse(raw));
-    showToast('📂 Draft loaded successfully!');
-  } catch (e) {
-    showToast('⚠️ Could not load saved data.');
-  }
+  // Inject a restore script right before </body>
+  const clientName = (data.hisName || data.hersName || 'Client').replace(/[^a-z0-9]/gi,'_');
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  const restoreScript = `<script>
+  window.addEventListener('DOMContentLoaded', function() {
+    var saved = ${JSON.stringify(JSON.stringify(data))};
+    try { restoreFormData(JSON.parse(saved)); } catch(e) {}
+    // Hide the restore prompt for saved files
+    var origConfirm = window.confirm;
+    window.confirm = function(msg) { if (msg && msg.includes('previously started')) return false; return origConfirm(msg); };
+  });
+  <\/script>`;
+
+  snapshot = snapshot.replace('</body>', restoreScript + '</body>');
+
+  const blob = new Blob([snapshot], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Retirement_Intake_${clientName}_${dateStr}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ Saved to your Downloads folder!');
 }
 
 // ── CLEAR FORM ────────────────────────────────────────────────────────────────
 function clearForm() {
-  if (!confirm('Clear all form data? This cannot be undone.')) return;
+  if (!confirm('Start over? All current entries will be cleared.')) return;
   document.querySelectorAll('input[id]').forEach(el => {
     if (el.type === 'radio' || el.type === 'checkbox') el.checked = false;
     else el.value = '';
   });
   document.querySelectorAll('select[id], textarea[id]').forEach(el => el.value = '');
-  showToast('🗑️ Form cleared.');
+  try { localStorage.removeItem('retirementIntakeForm_auto'); } catch(e) {}
+  document.getElementById('formDate').value = new Date().toISOString().split('T')[0];
+  showToast('🗑️ Form cleared. Ready for a new client.');
 }
 
 // ── EMAIL MODAL ───────────────────────────────────────────────────────────────
@@ -1770,15 +1786,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const d = document.getElementById('formDate');
   if (d && !d.value) d.value = new Date().toISOString().split('T')[0];
 
-  // Check for auto-saved data
+  // Auto-restore silently if data exists
   try {
     const auto = localStorage.getItem('retirementIntakeForm_auto');
     if (auto) {
       const data = JSON.parse(auto);
       if (data.hisName || data.hersName) {
-        if (confirm('A previously started form was found. Would you like to restore it?')) {
-          restoreFormData(data);
-        }
+        restoreFormData(data);
+        showToast('📋 Your previous session was restored automatically.');
       }
     }
   } catch(e) {}
