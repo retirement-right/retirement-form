@@ -476,8 +476,8 @@
       <div style="font-size:10px;color:#888;text-align:center;margin-top:2px">Saves a file to your Downloads folder</div>
     </div>
     <div style="display:flex;flex-direction:column;gap:2px;margin-right:8px">
-      <button class="btn btn-green" style="font-size:13px;padding:10px 24px" onclick="openEmailModal()">✉️ Email This Form</button>
-      <div style="font-size:10px;color:#888;text-align:center;margin-top:2px">Opens your email with form summary</div>
+      <button class="btn btn-green" style="font-size:13px;padding:10px 24px" onclick="submitToAdvisor()">📤 Submit to Advisor</button>
+      <div style="font-size:10px;color:#888;text-align:center;margin-top:2px">Sends directly to michaeleberhardt01@gmail.com</div>
     </div>
     <button class="btn btn-outline" onclick="clearForm()" style="margin-left:auto;align-self:flex-start;color:#dc2626;border-color:#dc2626;">✕ Start Over</button>
   </div>
@@ -1564,25 +1564,18 @@
 </div><!-- end page -->
 
 <!-- EMAIL MODAL -->
-<div class="modal-overlay no-print" id="emailModal">
+<div class="modal-overlay no-print" id="submitModal">
   <div class="modal">
-    <h3>Send Form by Email</h3>
-    <p>This will open your email client with a summary of the completed form attached as text. For a full PDF, use Print / Save PDF first, then attach manually.</p>
-    <div class="field">
-      <label>Recipient Email</label>
-      <input type="email" id="emailTo" placeholder="advisor@example.com">
+    <h3>Ready to Submit?</h3>
+    <p style="margin-bottom:14px">Your completed form will be sent directly to your advisor. Please confirm your name so we know who sent it.</p>
+    <div class="field" style="margin-bottom:16px">
+      <label>Your Full Name</label>
+      <input type="text" id="submitName" placeholder="First and Last Name" style="font-size:14px;padding:10px">
     </div>
-    <div class="field">
-      <label>Your Name (From)</label>
-      <input type="text" id="emailFrom" placeholder="Client name">
-    </div>
-    <div class="field">
-      <label>Subject Line</label>
-      <input type="text" id="emailSubject" value="Retirement Planning Intake Form — Completed">
-    </div>
+    <div id="submitStatus" style="display:none;padding:10px;border-radius:6px;margin-bottom:12px;font-size:13px;text-align:center"></div>
     <div class="modal-btns">
-      <button class="btn btn-outline" onclick="closeEmailModal()">Cancel</button>
-      <button class="btn btn-green" onclick="sendEmail()">Open Email Client ✉️</button>
+      <button class="btn btn-outline" onclick="closeSubmitModal()">Cancel</button>
+      <button class="btn btn-green" id="submitBtn" onclick="sendToAdvisor()" style="font-size:13px;padding:10px 24px">📤 Send to Advisor</button>
     </div>
   </div>
 </div>
@@ -1704,69 +1697,117 @@ function clearForm() {
 }
 
 // ── EMAIL MODAL ───────────────────────────────────────────────────────────────
-function openEmailModal() {
-  document.getElementById('emailModal').classList.add('open');
-}
-function closeEmailModal() {
-  document.getElementById('emailModal').classList.remove('open');
-}
-
-function sendEmail() {
-  const to = document.getElementById('emailTo').value.trim();
-  const from = document.getElementById('emailFrom').value.trim();
-  const subject = document.getElementById('emailSubject').value.trim();
-
-  if (!to) { showToast('⚠️ Please enter a recipient email.'); return; }
-
-  // Build summary text
+// ── SUBMIT TO ADVISOR VIA FORMSPREE ──────────────────────────────────────────
+function submitToAdvisor() {
+  document.getElementById('submitModal').classList.add('open');
+  // Pre-fill name if already entered
   const data = collectFormData();
-  const hisName = data.hisName || 'Client';
-  const hersName = data.hersName || 'Co-Client';
+  const name = data.hisName || data.hersName || '';
+  if (name) document.getElementById('submitName').value = name;
+}
+
+function closeSubmitModal() {
+  document.getElementById('submitModal').classList.remove('open');
+  document.getElementById('submitStatus').style.display = 'none';
+}
+
+async function sendToAdvisor() {
+  const name = document.getElementById('submitName').value.trim();
+  if (!name) {
+    showToast('⚠️ Please enter your name first.');
+    document.getElementById('submitName').focus();
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  const status = document.getElementById('submitStatus');
+  btn.textContent = '⏳ Sending...';
+  btn.disabled = true;
+
+  const data = collectFormData();
   const marital = data['radio_marital'] || 'Not specified';
 
-  let body = `RETIREMENT PLANNING INTAKE FORM\n`;
-  body += `Submitted by: ${from || 'Client'}\n`;
-  body += `Date: ${data.formDate || new Date().toLocaleDateString()}\n`;
-  body += `Advisor: ${data.advisorName || 'N/A'}\n\n`;
-  body += `--- CLIENT INFORMATION ---\n`;
-  body += `Marital Status: ${marital}\n`;
-  body += `Client: ${hisName} | Age: ${data.hisAge || ''} | DOB: ${data.hisDOB || ''}\n`;
-  body += `Email: ${data.hisEmail || ''} | Phone: ${data.hisPhone || ''}\n`;
-  body += `Employment: ${data['radio_hisEmploy'] || ''} | Occupation: ${data.hisOccupation || ''}\n\n`;
+  // Build full summary
+  let message = '=== RETIREMENT PLANNING INTAKE FORM ===\n';
+  message += 'Submitted by: ' + name + '\n';
+  message += 'Date: ' + (data.formDate || new Date().toLocaleDateString()) + '\n\n';
+  message += '--- CLIENT INFORMATION ---\n';
+  message += 'Marital Status: ' + marital + '\n';
+  message += 'Client: ' + (data.hisName||'') + ' | Age: ' + (data.hisAge||'') + ' | DOB: ' + (data.hisDOB||'') + '\n';
+  message += 'Phone: ' + (data.hisPhone||'') + ' | Email: ' + (data.hisEmail||'') + '\n';
+  message += 'Employment: ' + (data['radio_hisEmploy']||'') + ' | Occupation: ' + (data.hisOccupation||'') + '\n';
   if (marital === 'married') {
-    body += `Co-Client: ${hersName} | Age: ${data.hersAge || ''} | DOB: ${data.hersDOB || ''}\n`;
-    body += `Email: ${data.hersEmail || ''} | Phone: ${data.hersPhone || ''}\n`;
-    body += `Employment: ${data['radio_hersEmploy'] || ''} | Occupation: ${data.hersOccupation || ''}\n\n`;
+    message += 'Co-Client: ' + (data.hersName||'') + ' | Age: ' + (data.hersAge||'') + ' | DOB: ' + (data.hersDOB||'') + '\n';
+    message += 'Phone: ' + (data.hersPhone||'') + ' | Email: ' + (data.hersEmail||'') + '\n';
+    message += 'Employment: ' + (data['radio_hersEmploy']||'') + ' | Occupation: ' + (data.hersOccupation||'') + '\n';
   }
-  body += `--- SOCIAL SECURITY ---\n`;
-  body += `His SS: $${data.hisSS || '0'}/mo | FRA: ${data.hisFRA || ''} | FRA Amount: $${data.hisFRAamt || '0'}\n`;
-  body += `Collecting: ${data['radio_hisSScollecting'] || ''} | Strategy: ${data.hisSSstrategy || ''}\n`;
+  message += '\n--- SOCIAL SECURITY ---\n';
+  message += 'His SS: $' + (data.hisSS||'0') + '/mo | FRA: ' + (data.hisFRA||'') + ' | FRA Amt: $' + (data.hisFRAamt||'0') + '\n';
+  message += 'Collecting: ' + (data['radio_hisSScollecting']||'') + ' | Strategy: ' + (data.hisSSstrategy||'') + '\n';
   if (marital === 'married') {
-    body += `Her SS: $${data.hersSS || '0'}/mo | FRA: ${data.hersFRA || ''} | FRA Amount: $${data.hersFRAamt || '0'}\n`;
-    body += `Collecting: ${data['radio_hersSScollecting'] || ''} | Strategy: ${data.hersSSstrategy || ''}\n`;
+    message += 'Her SS: $' + (data.hersSS||'0') + '/mo | FRA: ' + (data.hersFRA||'') + ' | FRA Amt: $' + (data.hersFRAamt||'0') + '\n';
+    message += 'Collecting: ' + (data['radio_hersSScollecting']||'') + ' | Strategy: ' + (data.hersSSstrategy||'') + '\n';
   }
-  body += `\n--- 401(k) BALANCES ---\n`;
-  body += `His 401(k): $${data.his401kBalance || '0'} — ${data.his401kName || ''}\n`;
-  body += `Her 401(k): $${data.hers401kBalance || '0'} — ${data.hers401kName || ''}\n`;
-  body += `\n--- IRA BALANCES ---\n`;
-  body += `His Traditional IRA: $${data.hisTraditionalIRA || '0'} | Roth: $${data.hisRothIRA || '0'} | Inherited: $${data.hisInheritedIRA || '0'}\n`;
-  body += `Her Traditional IRA: $${data.hersTraditionalIRA || '0'} | Roth: $${data.hersRothIRA || '0'} | Inherited: $${data.hersInheritedIRA || '0'}\n`;
-  body += `\n--- NON-QUALIFIED ASSETS ---\n`;
-  body += `Joint Savings: $${data.jointSavings || '0'} | MM/CDs: $${data.jointMM || '0'} | Joint Brokerage: $${data.jointBrokerage || '0'}\n`;
-  body += `His Brokerage: $${data.hisBrokerage || '0'} | His NQ Annuity: $${data.hisNQAnnuity || '0'} | His Life CSV: $${data.hisLifeCSV || '0'}\n`;
-  body += `Her Brokerage: $${data.hersBrokerage || '0'} | Her NQ Annuity: $${data.hersNQAnnuity || '0'} | Her Life CSV: $${data.hersLifeCSV || '0'}\n`;
-  body += `\n--- INCOME NEEDS ---\n`;
-  body += `Monthly Need (Today): $${data.incomeNeeded || '0'} | In Retirement: $${data.incomeRetirement || '0'}\n`;
-  body += `His Annual Income: $${data.hisIncome || '0'} | Her Annual Income: $${data.hersIncome || '0'}\n`;
-  body += `Planning Horizon: To age ${data.planningHorizon || ''}\n`;
-  body += `\n--- NOTES ---\n`;
-  body += `${data.generalNotes || 'None'}\n`;
-  body += `\n— End of Intake Summary —\nThis is an auto-generated summary. Please request the full PDF for complete details.\n`;
+  message += '\n--- PENSION ---\n';
+  message += 'His Pension: ' + (data['radio_hisPension']||'no') + ' | Amt: $' + (data.hisPensionAmt||'0') + '/mo | ' + (data.hisPensionName||'') + '\n';
+  message += 'Her Pension: ' + (data['radio_hersPension']||'no') + ' | Amt: $' + (data.hersPensionAmt||'0') + '/mo | ' + (data.hersPensionName||'') + '\n';
+  message += '\n--- 401(k) ---\n';
+  message += 'His 401k: $' + (data.his401kBalance||'0') + ' | ' + (data.his401kName||'') + ' | Contributing: ' + (data['radio_his401kContrib']||'') + '\n';
+  message += 'Her 401k: $' + (data.hers401kBalance||'0') + ' | ' + (data.hers401kName||'') + ' | Contributing: ' + (data['radio_hers401kContrib']||'') + '\n';
+  message += '\n--- IRA ACCOUNTS ---\n';
+  message += 'His Traditional IRA: $' + (data.hisTraditionalIRA||'0') + ' | Roth: $' + (data.hisRothIRA||'0') + ' | Inherited: $' + (data.hisInheritedIRA||'0') + '\n';
+  message += 'Her Traditional IRA: $' + (data.hersTraditionalIRA||'0') + ' | Roth: $' + (data.hersRothIRA||'0') + ' | Inherited: $' + (data.hersInheritedIRA||'0') + '\n';
+  message += '\n--- NON-QUALIFIED ASSETS ---\n';
+  message += 'Joint Savings: $' + (data.jointSavings||'0') + ' | MM/CDs: $' + (data.jointMM||'0') + ' | Joint Brokerage: $' + (data.jointBrokerage||'0') + '\n';
+  message += 'His Brokerage: $' + (data.hisBrokerage||'0') + ' | His NQ Annuity: $' + (data.hisNQAnnuity||'0') + ' | His Life CSV: $' + (data.hisLifeCSV||'0') + '\n';
+  message += 'Her Brokerage: $' + (data.hersBrokerage||'0') + ' | Her NQ Annuity: $' + (data.hersNQAnnuity||'0') + ' | Her Life CSV: $' + (data.hersLifeCSV||'0') + '\n';
+  message += '\n--- INCOME NEEDS ---\n';
+  message += 'Monthly Need Today: $' + (data.incomeNeeded||'0') + ' | In Retirement: $' + (data.incomeRetirement||'0') + '\n';
+  message += 'His Annual Income: $' + (data.hisIncome||'0') + ' | Her Annual Income: $' + (data.hersIncome||'0') + '\n';
+  message += 'Planning Horizon: To age ' + (data.planningHorizon||'') + ' | Inflation: ' + (data.inflationRate||'') + '\n';
+  message += '\n--- RISK & GOALS ---\n';
+  message += 'His Risk: ' + (data['radio_hisRisk']||'') + ' | His Fear: ' + (data['radio_hisFear']||'') + '\n';
+  message += 'Her Risk: ' + (data['radio_hersRisk']||'') + ' | Her Fear: ' + (data['radio_hersFear']||'') + '\n';
+  message += 'Legacy Priority: ' + (data['radio_legacy']||'') + '\n';
+  message += '\n--- NOTES ---\n';
+  message += (data.generalNotes||'None') + '\n';
+  message += '\n=== END OF FORM ===';
 
-  const mailtoLink = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  window.location.href = mailtoLink;
-  closeEmailModal();
-  showToast('✉️ Opening email client…');
+  try {
+    // NOTE: Replace YOUR_FORMSPREE_ID below after signing up at formspree.io
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORMSPREE_ID';
+
+    const response = await fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        _subject: 'Retirement Intake Form — ' + name,
+        _replyto: data.hisEmail || data.hersEmail || '',
+        name: name,
+        message: message
+      })
+    });
+
+    if (response.ok) {
+      status.style.background = '#dcfce7';
+      status.style.color = '#166534';
+      status.style.border = '1px solid #86efac';
+      status.textContent = '✅ Sent successfully! Your advisor will be in touch soon.';
+      status.style.display = 'block';
+      btn.textContent = '✅ Sent!';
+      setTimeout(() => closeSubmitModal(), 3000);
+    } else {
+      throw new Error('Server error');
+    }
+  } catch(e) {
+    status.style.background = '#fef2f2';
+    status.style.color = '#991b1b';
+    status.style.border = '1px solid #fca5a5';
+    status.textContent = '⚠️ Could not send. Please call us at (your phone) or email michaeleberhardt01@gmail.com directly.';
+    status.style.display = 'block';
+    btn.textContent = '📤 Send to Advisor';
+    btn.disabled = false;
+  }
 }
 
 // ── AUTO-SAVE ON CHANGE ───────────────────────────────────────────────────────
