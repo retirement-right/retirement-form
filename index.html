@@ -1774,8 +1774,8 @@ async function sendToAdvisor() {
   message += '\n=== END OF FORM ===';
 
   try {
-    // NOTE: Replace YOUR_FORMSPREE_ID below after signing up at formspree.io
-    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORMSPREE_ID';
+    // NOTE: Replace xlgkvyzj below after signing up at formspree.io
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xlgkvyzj';
 
     const response = await fetch(FORMSPREE_ENDPOINT, {
       method: 'POST',
@@ -1803,7 +1803,7 @@ async function sendToAdvisor() {
     status.style.background = '#fef2f2';
     status.style.color = '#991b1b';
     status.style.border = '1px solid #fca5a5';
-    status.textContent = '⚠️ Could not send. Please call us at (your phone) or email michaeleberhardt01@gmail.com directly.';
+    status.textContent = '⚠️ Could not send. Please call us at 480-221-4264 or email michaeleberhardt01@gmail.com directly.';
     status.style.display = 'block';
     btn.textContent = '📤 Send to Advisor';
     btn.disabled = false;
