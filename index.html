@@ -178,9 +178,17 @@
         </thead>
         <tbody>
           <tr>
-            <td>Social Security FRA Benefit</td>
+            <td>
+              <div style="font-weight:500">Social Security Benefit Amount</div>
+              <div style="font-size:.78rem;color:var(--muted);margin-top:2px">If not yet collecting, enter your FRA benefit. If already collecting, enter your current monthly amount.</div>
+            </td>
             <td><div class="dollar-wrap"><input type="number" id="ss_p" min="0" placeholder="0"></div></td>
             <td><div class="dollar-wrap"><input type="number" id="ss_s" min="0" placeholder="0"></div></td>
+          </tr>
+          <tr style="background:#fafbfc">
+            <td style="font-size:.82rem;color:var(--muted);padding-left:16px">↳ Currently collecting?</td>
+            <td style="text-align:center"><label style="display:inline-flex;align-items:center;gap:6px;font-size:.85rem;cursor:pointer"><input type="checkbox" id="ss_collecting_p" style="width:16px;height:16px;accent-color:var(--gold)"> Yes</label></td>
+            <td style="text-align:center"><label style="display:inline-flex;align-items:center;gap:6px;font-size:.85rem;cursor:pointer"><input type="checkbox" id="ss_collecting_s" style="width:16px;height:16px;accent-color:var(--gold)"> Yes</label></td>
           </tr>
           <tr>
             <td>Currently Working — Monthly Income</td>
@@ -208,9 +216,9 @@
             <td><div class="dollar-wrap"><input type="number" id="ira_s2" min="0" placeholder="0"></div></td>
           </tr>
           <tr>
-            <td>IRA Balance #3</td>
-            <td><div class="dollar-wrap"><input type="number" id="ira_p3" min="0" placeholder="0"></div></td>
-            <td><div class="dollar-wrap"><input type="number" id="ira_s3" min="0" placeholder="0"></div></td>
+            <td>Inherited IRA Balance</td>
+            <td><div class="dollar-wrap"><input type="number" id="ira_inh_p" min="0" placeholder="0"></div></td>
+            <td><div class="dollar-wrap"><input type="number" id="ira_inh_s" min="0" placeholder="0"></div></td>
           </tr>
           <tr>
             <td>Pension — Monthly Benefit</td>
@@ -296,7 +304,11 @@ let saveTimer = null;
 function collectData() {
   const data = {};
   document.querySelectorAll('input[id]').forEach(el => {
-    if (el.type !== 'file') data[el.id] = el.value;
+    if (el.type === 'checkbox' && el.name !== 'estate') {
+      data[el.id] = el.checked.toString();
+    } else if (el.type !== 'file' && el.type !== 'checkbox') {
+      data[el.id] = el.value;
+    }
   });
   const estate = [];
   document.querySelectorAll('input[name=estate]:checked').forEach(el => estate.push(el.value));
@@ -305,7 +317,11 @@ function collectData() {
 }
 function populateData(data) {
   document.querySelectorAll('input[id]').forEach(el => {
-    if (el.type !== 'file' && data[el.id] !== undefined) el.value = data[el.id];
+    if (el.type === 'checkbox' && el.name !== 'estate' && data[el.id] !== undefined) {
+      el.checked = data[el.id] === 'true';
+    } else if (el.type !== 'file' && el.type !== 'checkbox' && data[el.id] !== undefined) {
+      el.value = data[el.id];
+    }
   });
   document.querySelectorAll('input[name=estate]').forEach(el => {
     el.checked = (data.estate || []).includes(el.value);
@@ -360,7 +376,8 @@ async function submitForm() {
     'Email': data.p_email || '—',
     'Phone': data.p_phone || '—',
     '-- RETIREMENT ASSETS --': '',
-    'SS FRA (Principal)': data.ss_p ? `$${data.ss_p}` : '—',
+    'SS Collecting (Principal)': data.ss_collecting_p === 'true' ? 'Yes' : 'No',
+    'SS Collecting (Spouse)': data.ss_collecting_s === 'true' ? 'Yes' : 'No',
     'SS FRA (Spouse)': data.ss_s ? `$${data.ss_s}` : '—',
     'Working Income (Principal)': data.work_p ? `$${data.work_p}` : '—',
     'Working Income (Spouse)': data.work_s ? `$${data.work_s}` : '—',
@@ -372,8 +389,8 @@ async function submitForm() {
     'IRA #1 (Spouse)': data.ira_s1 ? `$${data.ira_s1}` : '—',
     'IRA #2 (Principal)': data.ira_p2 ? `$${data.ira_p2}` : '—',
     'IRA #2 (Spouse)': data.ira_s2 ? `$${data.ira_s2}` : '—',
-    'IRA #3 (Principal)': data.ira_p3 ? `$${data.ira_p3}` : '—',
-    'IRA #3 (Spouse)': data.ira_s3 ? `$${data.ira_s3}` : '—',
+    'Inherited IRA (Principal)': data.ira_inh_p ? `$${data.ira_inh_p}` : '—',
+    'Inherited IRA (Spouse)': data.ira_inh_s ? `$${data.ira_inh_s}` : '—',
     'Pension (Principal)': data.pension_p ? `$${data.pension_p}` : '—',
     'Pension (Spouse)': data.pension_s ? `$${data.pension_s}` : '—',
     '-- JOINT ASSETS --': '',
