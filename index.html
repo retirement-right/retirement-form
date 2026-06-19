@@ -14,19 +14,30 @@
   }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
 
+  /* HEADER */
   header { background: var(--navy); color: white; padding: 20px 16px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
   .header-inner { max-width: 820px; margin: 0 auto; }
   header h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: .02em; color: var(--gold); }
   header p { font-size: .8rem; opacity: .7; margin-top: 2px; }
   #autosave-indicator { font-size: .75rem; opacity: .65; margin-top: 8px; min-height: 16px; color: #a5f3b4; }
 
+  /* MAIN */
   main { max-width: 820px; margin: 0 auto; padding: 28px 16px 60px; }
 
-  .banner { background: var(--light-gold); border: 1px solid var(--gold); border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; text-align: center; }
+  /* GOLD BANNER */
+  .banner {
+    background: var(--light-gold);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
   .banner h2 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
   .banner p { font-size: .88rem; color: #5a4a1a; line-height: 1.6; margin-bottom: 6px; }
   .banner small { font-size: .78rem; color: var(--muted); }
 
+  /* SECTIONS */
   .section { background: var(--white); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; overflow: hidden; }
   .section-header { background: var(--navy); color: white; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
   .section-num { background: var(--gold); color: #1a1a1a; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; flex-shrink: 0; }
@@ -34,7 +45,7 @@
   .section-body { padding: 20px; }
 
   .info-table { width: 100%; border-collapse: collapse; }
-  .info-table th { font-size: .75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; padding: 0 8px 8px 8px; text-align: left; }
+  .info-table th { font-size: .75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; padding: 0 8px 8px; text-align: left; }
   .info-table th:first-child { width: 90px; }
   .info-table td { padding: 6px 8px; vertical-align: middle; }
   .info-table td:first-child { font-size: .88rem; font-weight: 600; color: var(--navy); white-space: nowrap; }
@@ -44,7 +55,7 @@
   .asset-table th:not(:first-child) { text-align: center; color: var(--navy); }
   .asset-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: .88rem; vertical-align: middle; }
   .asset-table td:first-child { font-weight: 500; color: var(--text); }
-  .asset-table td.sub { font-size: .8rem; color: var(--muted); padding-left: 22px; background: #fafbfc; }
+  .asset-table td.sub { font-size: .78rem; color: var(--muted); padding-left: 22px; background: #fafbfc; }
   .asset-table td:not(:first-child) { text-align: center; }
   .asset-table tr:last-child td { border-bottom: none; }
 
@@ -62,31 +73,37 @@
 
   /* Dollar inputs as text with $ prefix */
   .dollar-wrap { position: relative; }
-  .dollar-wrap::before { content: '$'; position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: .85rem; pointer-events: none; z-index:1; }
+  .dollar-wrap::before { content: '$'; position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: .85rem; pointer-events: none; z-index: 1; }
   .dollar-wrap input { padding-left: 20px; }
 
   .check-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
   .check-list li label { display: flex; align-items: center; gap: 10px; font-size: .9rem; cursor: pointer; }
-  .check-list input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; flex-shrink: 0; }
+  .check-list input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; }
 
-  .submit-area { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; text-align: center; }
-  .btn-submit { display: inline-flex; align-items: center; gap: 8px; padding: 12px 32px; background: var(--green); color: white; border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .15s; }
-  .btn-submit:hover { background: #15803d; }
-  .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
-  #submit-msg { margin-top: 14px; font-size: .9rem; min-height: 20px; }
+  select { width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: .9rem; font-family: inherit; background: white; color: var(--text); }
+  select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,.15); }
+
+  /* SUBMIT */
+  .submit-row { text-align: center; margin-top: 28px; }
+  #submit-btn {
+    background: var(--navy); color: var(--gold); border: none; border-radius: 8px;
+    padding: 14px 36px; font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: background .15s; letter-spacing: .02em;
+  }
+  #submit-btn:hover { background: #233358; }
+  #submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+  #submit-msg { margin-top: 12px; font-size: .88rem; min-height: 20px; }
+  #submit-msg.error { color: var(--red); font-weight: 600; }
   #submit-msg.success { color: var(--green); font-weight: 600; }
-  #submit-msg.error { color: var(--red); }
-  #submit-msg.warning { color: #b45309; }
 
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; align-items: center; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: white; border-radius: 12px; padding: 28px 24px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,.3); text-align: center; }
-  .modal h3 { font-size: 1.1rem; color: var(--navy); margin-bottom: 10px; }
-  .modal p { font-size: .88rem; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
-  .btn-primary { display: inline-flex; align-items: center; padding: 10px 24px; background: var(--navy); color: white; border: none; border-radius: var(--radius); font-size: .9rem; font-weight: 600; cursor: pointer; }
-  .btn-primary:hover { background: #253563; }
-
-  footer { text-align: center; font-size: .75rem; color: var(--muted); padding: 20px; border-top: 1px solid var(--border); margin-top: 8px; }
+  /* SUCCESS MODAL */
+  #success-modal { display: none; position: fixed; inset: 0; background: rgba(26,39,68,.55); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+  #success-modal.open { display: flex; }
+  .modal-card { background: white; border-radius: 14px; padding: 36px 28px; max-width: 380px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+  .modal-card .check { width: 56px; height: 56px; border-radius: 50%; background: var(--light-gold); border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.6rem; color: var(--navy); }
+  .modal-card h3 { color: var(--navy); font-size: 1.15rem; margin-bottom: 10px; }
+  .modal-card p { font-size: .9rem; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
+  .modal-card button { background: var(--navy); color: var(--gold); border: none; border-radius: 6px; padding: 10px 22px; font-weight: 600; font-size: .88rem; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -94,450 +111,468 @@
 <header>
   <div class="header-inner">
     <h1>Retirement Right</h1>
-    <p>Pre-Appointment Information — Confidential</p>
-    <div id="autosave-indicator">Auto-save is on — your data is saved in this browser</div>
+    <p>Pre-Appointment Information</p>
+    <div id="autosave-indicator"></div>
   </div>
 </header>
 
 <main>
-
   <div class="banner">
-    <h2>Complete this form to receive your complimentary Retirement Readiness Overview.</h2>
-    <p>By sharing a few key numbers, you give Retirement-Right the information needed to provide a meaningful, personalized assessment of where you stand — at no cost and no obligation. Your information is kept strictly confidential and used solely to prepare for your conversation.</p>
-    <small>Fields marked optional may be left blank — complete what you know.</small>
+    <h2>Get Ready for Your Appointment</h2>
+    <p>Complete this form to receive your complimentary Retirement Readiness Overview. Sharing a few details in advance allows your advisor to prepare a personalized review for your meeting with Ebby.</p>
+    <small>All information is kept strictly confidential and used solely for planning purposes.</small>
   </div>
 
-  <!-- SECTION 1 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">1</div>
-      <h2>Personal Information</h2>
-    </div>
-    <div class="section-body">
-      <table class="info-table">
-        <thead>
+  <form id="rr-form" autocomplete="off">
+
+    <!-- SECTION 1: PERSONAL INFO -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <h2>Personal Information</h2>
+      </div>
+      <div class="section-body">
+        <table class="info-table">
           <tr>
             <th></th>
-            <th>Full Name</th>
-            <th style="width:80px">Age</th>
-            <th style="width:160px">Date of Birth</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Date of Birth</th>
           </tr>
-        </thead>
-        <tbody>
           <tr>
             <td>Principal</td>
-            <td><input type="text" id="p_name" placeholder="Full name"></td>
-            <td><input type="number" id="p_age" min="40" max="100" placeholder="—"></td>
-            <td><input type="date" id="p_dob"></td>
+            <td><input type="text" id="p_name" name="p_name" placeholder="Full name"></td>
+            <td><input type="number" id="p_age" name="p_age" placeholder="Age" min="0" max="120"></td>
+            <td><input type="date" id="p_dob" name="p_dob"></td>
           </tr>
           <tr>
             <td>Spouse</td>
-            <td><input type="text" id="s_name" placeholder="Full name (if applicable)"></td>
-            <td><input type="number" id="s_age" min="40" max="100" placeholder="—"></td>
-            <td><input type="date" id="s_dob"></td>
+            <td><input type="text" id="s_name" name="s_name" placeholder="Full name"></td>
+            <td><input type="number" id="s_age" name="s_age" placeholder="Age" min="0" max="120"></td>
+            <td><input type="date" id="s_dob" name="s_dob"></td>
           </tr>
-        </tbody>
-      </table>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
-        <div class="field"><label class="field-label">Email</label><input type="email" id="p_email" placeholder="your@email.com"></div>
-        <div class="field"><label class="field-label">Phone</label><input type="tel" id="p_phone" placeholder="(000) 000-0000"></div>
+        </table>
+        <div class="bottom-grid" style="margin-top:16px;margin-bottom:0;">
+          <div class="field">
+            <label class="field-label" for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@email.com">
+          </div>
+          <div class="field">
+            <label class="field-label" for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" placeholder="(480) 000-0000">
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- SECTION 2 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">2</div>
-      <h2>Individual Retirement Assets</h2>
-    </div>
-    <div class="section-body">
-      <table class="asset-table">
-        <thead>
+    <!-- SECTION 2: INDIVIDUAL RETIREMENT ASSETS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <h2>Individual Retirement Assets</h2>
+      </div>
+      <div class="section-body">
+        <table class="asset-table">
           <tr>
-            <th style="width:45%"></th>
+            <th></th>
             <th>Principal</th>
             <th>Spouse</th>
           </tr>
-        </thead>
-        <tbody>
           <tr>
+            <td>Social Security Benefit (FRA)</td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="p_ss" name="p_ss" placeholder="0"></td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="s_ss" name="s_ss" placeholder="0"></td>
+          </tr>
+          <tr>
+            <td>Currently Collecting SS?</td>
             <td>
-              <div style="font-weight:500">Social Security Benefit Amount</div>
-              <div style="font-size:.78rem;color:var(--muted);margin-top:2px">If not yet collecting, enter your FRA benefit. If already collecting, enter your current monthly amount.</div>
+              <select id="p_ss_collecting" name="p_ss_collecting">
+                <option value="">—</option><option value="Yes">Yes</option><option value="No">No</option>
+              </select>
             </td>
-            <td><div class="dollar-wrap"><input type="text" id="ss_p" class="dollar-input" placeholder="0"></div></td>
-            <td><div class="dollar-wrap"><input type="text" id="ss_s" class="dollar-input" placeholder="0"></div></td>
+            <td>
+              <select id="s_ss_collecting" name="s_ss_collecting">
+                <option value="">—</option><option value="Yes">Yes</option><option value="No">No</option>
+              </select>
+            </td>
           </tr>
           <tr>
-            <td class="sub">↳ Currently collecting?</td>
-            <td style="text-align:center"><label style="display:inline-flex;align-items:center;gap:6px;font-size:.85rem;cursor:pointer"><input type="checkbox" id="ss_collecting_p" style="width:16px;height:16px;accent-color:var(--gold)"> Yes</label></td>
-            <td style="text-align:center"><label style="display:inline-flex;align-items:center;gap:6px;font-size:.85rem;cursor:pointer"><input type="checkbox" id="ss_collecting_s" style="width:16px;height:16px;accent-color:var(--gold)"> Yes</label></td>
+            <td>Working — Monthly Income</td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="p_working" name="p_working" placeholder="0"></td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="s_working" name="s_working" placeholder="0"></td>
           </tr>
           <tr>
-            <td>Currently Working — Monthly Income</td>
-            <td><div class="dollar-wrap"><input type="text" id="work_p" class="dollar-input" placeholder="0"></div></td>
-            <td><div class="dollar-wrap"><input type="text" id="work_s" class="dollar-input" placeholder="0"></div></td>
+            <td>401(k)/403(b) Balance #1</td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="p_401k_1" name="p_401k_1" placeholder="0"></td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="s_401k_1" name="s_401k_1" placeholder="0"></td>
           </tr>
           <tr>
-            <td>401(k) / 403(b) Balance #1</td>
-            <td><div class="dollar-wrap"><input type="text" id="k401_p1" class="dollar-input" placeholder="0"></div></td>
-            <td><div class="dollar-wrap"><input type="text" id="k401_s1" class="dollar-input" placeholder="0"></div></td>
-          </tr>
-          <tr>
-            <td>401(k) / 403(b) Balance #2</td>
-            <td><div class="dollar-wrap"><input type="text" id="k401_p2" class="dollar-input" placeholder="0"></div></td>
-            <td><div class="dollar-wrap"><input type="text" id="k401_s2" class="dollar-input" placeholder="0"></div></td>
+            <td>401(k)/403(b) Balance #2</td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="p_401k_2" name="p_401k_2" placeholder="0"></td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="s_401k_2" name="s_401k_2" placeholder="0"></td>
           </tr>
           <tr>
             <td>IRA Balance #1</td>
-            <td><div class="dollar-wrap"><input type="text" id="ira_p1" class="dollar-input" placeholder="0"></div></td>
-            <td><div class="dollar-wrap"><input type="text" id="ira_s1" class="dollar-input" placeholder="0"></div></td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="p_ira_1" name="p_ira_1" placeholder="0"></td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="s_ira_1" name="s_ira_1" placeholder="0"></td>
           </tr>
           <tr>
             <td>IRA Balance #2</td>
-            <td><div class="dollar-wrap"><input type="text" id="ira_p2" class="dollar-input" placeholder="0"></div></td>
-            <td><div class="dollar-wrap"><input type="text" id="ira_s2" class="dollar-input" placeholder="0"></div></td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="p_ira_2" name="p_ira_2" placeholder="0"></td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="s_ira_2" name="s_ira_2" placeholder="0"></td>
           </tr>
           <tr>
-            <td>Inherited IRA Balance</td>
-            <td><div class="dollar-wrap"><input type="text" id="ira_inh_p" class="dollar-input" placeholder="0"></div></td>
-            <td><div class="dollar-wrap"><input type="text" id="ira_inh_s" class="dollar-input" placeholder="0"></div></td>
+            <td>Inherited IRA</td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="p_inherited_ira" name="p_inherited_ira" placeholder="0"></td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="s_inherited_ira" name="s_inherited_ira" placeholder="0"></td>
           </tr>
           <tr>
-            <td>Pension — Monthly Benefit</td>
-            <td><div class="dollar-wrap"><input type="text" id="pension_p" class="dollar-input" placeholder="0"></div></td>
-            <td><div class="dollar-wrap"><input type="text" id="pension_s" class="dollar-input" placeholder="0"></div></td>
+            <td>Pension — Monthly</td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="p_pension" name="p_pension" placeholder="0"></td>
+            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="s_pension" name="s_pension" placeholder="0"></td>
           </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- SECTION 3 + 4 -->
-  <div class="bottom-grid">
-    <div class="section" style="margin-bottom:0">
-      <div class="section-header">
-        <div class="section-num">3</div>
-        <h2>Joint Liquid Assets</h2>
-      </div>
-      <div class="section-body">
-        <div class="field" style="margin-bottom:12px">
-          <label class="field-label">Bank / Savings Accounts</label>
-          <div class="dollar-wrap"><input type="text" id="joint_savings" class="dollar-input" placeholder="0"></div>
-        </div>
-        <div class="field" style="margin-bottom:12px">
-          <label class="field-label">Investments / Brokerage</label>
-          <div class="dollar-wrap"><input type="text" id="joint_investments" class="dollar-input" placeholder="0"></div>
-        </div>
-        <div class="field" style="margin-bottom:12px">
-          <label class="field-label">Annuities</label>
-          <div class="dollar-wrap"><input type="text" id="joint_annuity" class="dollar-input" placeholder="0"></div>
-        </div>
-        <div class="field">
-          <label class="field-label">Life Insurance CSV</label>
-          <div class="dollar-wrap"><input type="text" id="joint_lifeins" class="dollar-input" placeholder="0"></div>
-        </div>
+        </table>
       </div>
     </div>
 
-    <div class="section" style="margin-bottom:0">
-      <div class="section-header">
-        <div class="section-num">4</div>
-        <h2>Estate Planning</h2>
+    <div class="bottom-grid">
+      <!-- SECTION 3: JOINT LIQUID ASSETS -->
+      <div class="section" style="margin-bottom:0;">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <h2>Joint Liquid Assets</h2>
+        </div>
+        <div class="section-body">
+          <div class="field" style="margin-bottom:14px;">
+            <label class="field-label" for="savings">Bank / Savings</label>
+            <div class="dollar-wrap"><input type="text" inputmode="numeric" id="savings" name="savings" placeholder="0"></div>
+          </div>
+          <div class="field" style="margin-bottom:14px;">
+            <label class="field-label" for="investments">Investments / Brokerage</label>
+            <div class="dollar-wrap"><input type="text" inputmode="numeric" id="investments" name="investments" placeholder="0"></div>
+          </div>
+          <div class="field" style="margin-bottom:14px;">
+            <label class="field-label" for="annuities">Annuities</label>
+            <div class="dollar-wrap"><input type="text" inputmode="numeric" id="annuities" name="annuities" placeholder="0"></div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="life_ins">Life Insurance CSV</label>
+            <div class="dollar-wrap"><input type="text" inputmode="numeric" id="life_ins" name="life_ins" placeholder="0"></div>
+          </div>
+        </div>
       </div>
-      <div class="section-body">
-        <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Check all that are currently in place:</p>
-        <ul class="check-list">
-          <li><label><input type="checkbox" name="estate" value="Trust or Will"> Trust or Will</label></li>
-          <li><label><input type="checkbox" name="estate" value="Powers of Attorney"> Powers of Attorney</label></li>
-          <li><label><input type="checkbox" name="estate" value="Living Will / Directive"> Living Will / Directive</label></li>
-          <li><label><input type="checkbox" name="estate" value="Beneficiaries Updated"> Beneficiaries Updated</label></li>
-          <li><label><input type="checkbox" name="estate" value="Retirement Planning Done"> Retirement Planning Done Previously</label></li>
-        </ul>
+
+      <!-- SECTION 4: ESTATE PLANNING -->
+      <div class="section" style="margin-bottom:0;">
+        <div class="section-header">
+          <div class="section-num">4</div>
+          <h2>Estate Planning</h2>
+        </div>
+        <div class="section-body">
+          <ul class="check-list">
+            <li><label><input type="checkbox" id="est_trust" name="est_trust"> Trust or Will?</label></li>
+            <li><label><input type="checkbox" id="est_poa" name="est_poa"> Powers of Attorney</label></li>
+            <li><label><input type="checkbox" id="est_living_will" name="est_living_will"> Living Will?</label></li>
+            <li><label><input type="checkbox" id="est_planning_done" name="est_planning_done"> Any retirement planning done?</label></li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- SUBMIT -->
-  <div class="submit-area">
-    <p style="font-size:.88rem;color:var(--muted);margin-bottom:16px">📋 <strong>Note:</strong> To provide accurate Social Security calculations, your date of birth will be needed — your advisor will confirm that at your appointment.</p>
-    <button class="btn-submit" id="submit-btn" onclick="submitForm()">📤 Submit to Advisor</button>
-    <div id="submit-msg"></div>
-  </div>
-
+    <div class="submit-row">
+      <button type="submit" id="submit-btn">📤 Submit to Advisor</button>
+      <div id="submit-msg"></div>
+    </div>
+  </form>
 </main>
 
-<footer>CONFIDENTIAL — For Planning Purposes Only. This form does not constitute investment, legal, or tax advice. | © 2026 Retirement Right</footer>
-
-<div class="modal-overlay" id="success-modal">
-  <div class="modal">
-    <div style="font-size:2.5rem;margin-bottom:12px">✅</div>
-    <h3>Form Submitted!</h3>
-    <p>Your information has been received. Your advisor will be in touch shortly to confirm your appointment.</p>
-    <button class="btn-primary" onclick="document.getElementById('success-modal').classList.remove('open')">Done</button>
+<div id="success-modal">
+  <div class="modal-card">
+    <div class="check">✓</div>
+    <h3>Thank You!</h3>
+    <p>Your advisor will be in touch shortly to schedule your complimentary Retirement Readiness Overview.</p>
+    <button onclick="document.getElementById('success-modal').classList.remove('open')">Close</button>
   </div>
 </div>
 
+<!-- pdf-lib: client-side PDF generation, no backend needed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script>
-// ── DOLLAR FORMATTING ─────────────────────────────────────────
-function formatDollar(val) {
-  const num = parseFloat(val.replace(/[^0-9.]/g, ''));
-  if (isNaN(num)) return '';
-  return num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-}
-function rawDollar(val) {
-  return val.replace(/[^0-9.]/g, '');
-}
+  const FORM_FIELDS = [
+    'p_name','p_age','p_dob','s_name','s_age','s_dob','email','phone',
+    'p_ss','s_ss','p_ss_collecting','s_ss_collecting','p_working','s_working',
+    'p_401k_1','s_401k_1','p_401k_2','s_401k_2','p_ira_1','s_ira_1','p_ira_2','s_ira_2',
+    'p_inherited_ira','s_inherited_ira','p_pension','s_pension',
+    'savings','investments','annuities','life_ins',
+    'est_trust','est_poa','est_living_will','est_planning_done'
+  ];
 
-document.querySelectorAll('.dollar-input').forEach(input => {
-  // Allow only numbers and decimals while typing
-  input.addEventListener('input', function() {
-    const pos = this.selectionStart;
-    const raw = rawDollar(this.value);
-    this.value = raw; // keep raw while typing
-  });
-  // Format on blur
-  input.addEventListener('blur', function() {
-    if (this.value) this.value = formatDollar(this.value);
-  });
-  // Strip commas on focus so user can edit cleanly
-  input.addEventListener('focus', function() {
-    this.value = rawDollar(this.value);
-  });
-});
+  const STORAGE_KEY = 'rr_preappt';
+  const form = document.getElementById('rr-form');
+  const indicator = document.getElementById('autosave-indicator');
 
-// ── PHONE FORMATTING ─────────────────────────────────────────
-function formatPhone(val) {
-  const digits = val.replace(/\D/g, '').slice(0, 10);
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 6) return `${digits.slice(0,3)}-${digits.slice(3)}`;
-  return `${digits.slice(0,3)}-${digits.slice(3,6)}-${digits.slice(6)}`;
-}
-
-document.getElementById('p_phone').addEventListener('input', function() {
-  const pos = this.selectionStart;
-  this.value = formatPhone(this.value);
-});
-
-
-function calcAge(dob) {
-  if (!dob) return '';
-  const today = new Date();
-  const birth = new Date(dob);
-  let age = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-  return age >= 0 && age < 120 ? age : '';
-}
-function calcDOB(age) {
-  if (!age || age < 1 || age > 110) return '';
-  const year = new Date().getFullYear() - parseInt(age);
-  return `${year}-01-01`;
-}
-
-document.getElementById('p_dob').addEventListener('change', function() {
-  const age = calcAge(this.value);
-  if (age !== '') document.getElementById('p_age').value = age;
-});
-document.getElementById('p_age').addEventListener('change', function() {
-  if (!document.getElementById('p_dob').value && this.value)
-    document.getElementById('p_dob').value = calcDOB(this.value);
-});
-document.getElementById('s_dob').addEventListener('change', function() {
-  const age = calcAge(this.value);
-  if (age !== '') document.getElementById('s_age').value = age;
-});
-document.getElementById('s_age').addEventListener('change', function() {
-  if (!document.getElementById('s_dob').value && this.value)
-    document.getElementById('s_dob').value = calcDOB(this.value);
-});
-
-// ── DATA COLLECTION ───────────────────────────────────────────
-function collectData() {
-  const data = {};
-  document.querySelectorAll('input[id]').forEach(el => {
-    if (el.type === 'file') return;
-    if (el.type === 'checkbox' && el.name !== 'estate') {
-      data[el.id] = el.checked.toString();
-    } else if (el.type !== 'checkbox') {
-      // Store raw number for dollar fields
-      data[el.id] = el.classList.contains('dollar-input') ? rawDollar(el.value) : el.value;
-    }
-  });
-  const estate = [];
-  document.querySelectorAll('input[name=estate]:checked').forEach(el => estate.push(el.value));
-  data.estate = estate;
-  return data;
-}
-
-function populateData(data) {
-  document.querySelectorAll('input[id]').forEach(el => {
-    if (el.type === 'file') return;
-    if (el.type === 'checkbox' && el.name !== 'estate' && data[el.id] !== undefined) {
-      el.checked = data[el.id] === 'true';
-    } else if (el.type !== 'checkbox' && data[el.id] !== undefined) {
-      el.value = data[el.id];
-      // Re-format dollar fields on load
-      if (el.classList.contains('dollar-input') && el.value)
-        el.value = formatDollar(el.value);
-    }
-  });
-  document.querySelectorAll('input[name=estate]').forEach(el => {
-    el.checked = (data.estate || []).includes(el.value);
-  });
-}
-
-// ── AUTO-SAVE ─────────────────────────────────────────────────
-let saveTimer = null;
-function autoSave() {
-  try {
-    localStorage.setItem('rr_preappt', JSON.stringify(collectData()));
-    const t = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-    document.getElementById('autosave-indicator').textContent = `✓ Auto-saved at ${t}`;
-  } catch(e) {}
-}
-document.addEventListener('input', () => { clearTimeout(saveTimer); saveTimer = setTimeout(autoSave, 1000); });
-document.addEventListener('change', () => { clearTimeout(saveTimer); saveTimer = setTimeout(autoSave, 1000); });
-window.addEventListener('DOMContentLoaded', () => {
-  try {
-    const raw = localStorage.getItem('rr_preappt');
-    if (raw) {
-      const data = JSON.parse(raw);
-      populateData(data);
-      const filled = Object.values(data).filter(v => Array.isArray(v) ? v.length : v !== '').length;
-      if (filled > 0) document.getElementById('autosave-indicator').textContent = `↩ Restored ${filled} saved fields from your last session`;
-    }
-  } catch(e) {}
-});
-
-// ── SUBMIT ─────────────────────────────────────────────────
-function fmt(val) { return val ? `$${Number(rawDollar(val)).toLocaleString('en-US')}` : '—'; }
-
-function buildEmailHTML(data) {
-  const row = (label, val) => `
-    <tr>
-      <td style="padding:6px 10px;font-size:13px;color:#222;border-bottom:1px solid #e5e7eb;">${label}</td>
-      <td style="padding:6px 10px;font-size:13px;color:#1a2744;font-weight:600;border-bottom:1px solid #e5e7eb;text-align:right;">${val}</td>
-    </tr>`;
-  const sectionHdr = (num, title) => `
-    <tr>
-      <td colspan="2" style="background:#1a2744;color:#fff;font-size:13px;font-weight:700;padding:10px 14px;border-radius:6px 6px 0 0;">
-        <span style="background:#c9a84c;color:#1a1a1a;border-radius:50%;display:inline-block;width:20px;height:20px;text-align:center;line-height:20px;font-size:11px;margin-right:8px;">${num}</span>${title}
-      </td>
-    </tr>`;
-  const twoColRow = (label, pVal, sVal) => `
-    <tr>
-      <td style="padding:6px 10px;font-size:13px;color:#222;border-bottom:1px solid #e5e7eb;">${label}</td>
-      <td style="padding:6px 10px;font-size:13px;color:#1a2744;font-weight:600;border-bottom:1px solid #e5e7eb;text-align:right;">${pVal}</td>
-      <td style="padding:6px 10px;font-size:13px;color:#1a2744;font-weight:600;border-bottom:1px solid #e5e7eb;text-align:right;">${sVal}</td>
-    </tr>`;
-  const twoColHdr = () => `
-    <tr style="background:#f5edda;">
-      <td style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;"></td>
-      <td style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;text-align:right;">Principal</td>
-      <td style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;text-align:right;">Spouse</td>
-    </tr>`;
-
-  return `
-  <div style="font-family:-apple-system,Segoe UI,sans-serif;max-width:640px;margin:0 auto;background:#f7f8fa;padding:20px;">
-
-    <div style="background:#1a2744;border-radius:10px 10px 0 0;padding:18px 20px;">
-      <div style="color:#c9a84c;font-size:18px;font-weight:700;letter-spacing:.02em;">Retirement Right</div>
-      <div style="color:#fff;opacity:.75;font-size:12px;margin-top:2px;">Pre-Appointment Information — Confidential</div>
-    </div>
-
-    <div style="background:#f5edda;border:1px solid #c9a84c;border-top:none;padding:14px 20px;font-size:12px;color:#5a4a1a;">
-      Submitted ${new Date().toLocaleString()}
-    </div>
-
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #dde2ec;border-top:none;margin-bottom:16px;">
-      ${sectionHdr(1, 'Personal Information')}
-      ${row('Principal Name', data.p_name || '—')}
-      ${row('Principal Age / DOB', `${data.p_age || '—'} / ${data.p_dob || '—'}`)}
-      ${row('Spouse Name', data.s_name || '—')}
-      ${row('Spouse Age / DOB', `${data.s_age || '—'} / ${data.s_dob || '—'}`)}
-      ${row('Email', data.p_email || '—')}
-      ${row('Phone', data.p_phone || '—')}
-    </table>
-
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #dde2ec;border-top:none;margin-bottom:16px;">
-      ${sectionHdr(2, 'Individual Retirement Assets')}
-      ${twoColHdr()}
-      ${twoColRow('Social Security Benefit', fmt(data.ss_p), fmt(data.ss_s))}
-      ${twoColRow('Currently Collecting SS?', data.ss_collecting_p === 'true' ? 'Yes' : 'No', data.ss_collecting_s === 'true' ? 'Yes' : 'No')}
-      ${twoColRow('Working — Monthly Income', fmt(data.work_p), fmt(data.work_s))}
-      ${twoColRow('401(k)/403(b) Balance #1', fmt(data.k401_p1), fmt(data.k401_s1))}
-      ${twoColRow('401(k)/403(b) Balance #2', fmt(data.k401_p2), fmt(data.k401_s2))}
-      ${twoColRow('IRA Balance #1', fmt(data.ira_p1), fmt(data.ira_s1))}
-      ${twoColRow('IRA Balance #2', fmt(data.ira_p2), fmt(data.ira_s2))}
-      ${twoColRow('Inherited IRA', fmt(data.ira_inh_p), fmt(data.ira_inh_s))}
-      ${twoColRow('Pension — Monthly', fmt(data.pension_p), fmt(data.pension_s))}
-    </table>
-
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #dde2ec;border-top:none;margin-bottom:16px;">
-      ${sectionHdr(3, 'Joint Liquid Assets')}
-      ${row('Bank / Savings', fmt(data.joint_savings))}
-      ${row('Investments / Brokerage', fmt(data.joint_investments))}
-      ${row('Annuities', fmt(data.joint_annuity))}
-      ${row('Life Insurance CSV', fmt(data.joint_lifeins))}
-    </table>
-
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #dde2ec;border-top:none;margin-bottom:16px;">
-      ${sectionHdr(4, 'Estate Planning')}
-      ${row('Documents in Place', (data.estate || []).join(', ') || 'None indicated')}
-    </table>
-
-    <div style="text-align:center;font-size:11px;color:#6b7280;padding:10px;">
-      CONFIDENTIAL — For Planning Purposes Only. This form does not constitute investment, legal, or tax advice.
-    </div>
-  </div>`;
-}
-
-async function submitForm() {
-  const data = collectData();
-  const filled = Object.values(data).filter(v => Array.isArray(v) ? v.length : v !== '').length;
-  if (filled === 0) {
-    const msg = document.getElementById('submit-msg');
-    msg.className = 'warning';
-    msg.textContent = 'Your form appears to be blank. Please fill in at least your name and one other field before submitting.';
-    return;
-  }
-
-  const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
-
-  try {
-    const payload = {
-      access_key: '07e7ab7a-15c7-49af-aea6-a97fbc690fa6',
-      subject: `Pre-Appointment Form — ${data.p_name || 'New Client'}`,
-      from_name: 'Retirement Right Intake Form',
-      email: data.p_email || undefined,
-      message: buildEmailHTML(data)
-    };
-
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload)
+  /* ---------- Autosave to localStorage ---------- */
+  function collectData() {
+    const data = {};
+    FORM_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      data[id] = el.type === 'checkbox' ? el.checked : el.value;
     });
-    const result = await res.json();
-    if (res.ok && result.success) {
-      document.getElementById('success-modal').classList.add('open');
-      try { localStorage.removeItem('rr_preappt'); } catch(e) {}
-    } else {
-      throw new Error('Server error');
-    }
-  } catch(e) {
-    const msg = document.getElementById('submit-msg');
-    msg.className = 'error';
-    msg.textContent = 'Something went wrong — please call 602-598-2992 or email michael@retirement-right.com directly.';
+    return data;
   }
 
-  btn.disabled = false;
-  btn.textContent = '📤 Submit to Advisor';
-}
+  function restoreData() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      Object.keys(saved).forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.type === 'checkbox') el.checked = saved[id];
+        else el.value = saved[id];
+      });
+    } catch(e) {}
+  }
+
+  let saveTimeout;
+  form.addEventListener('input', () => {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
+        indicator.textContent = 'Draft saved ✓';
+        setTimeout(() => indicator.textContent = '', 2000);
+      } catch(e) {}
+    }, 500);
+  });
+
+  restoreData();
+
+  /* ---------- Dollar formatting on blur ---------- */
+  document.querySelectorAll('.dollar-wrap input').forEach(inp => {
+    inp.addEventListener('blur', () => {
+      const raw = inp.value.replace(/[^0-9.]/g, '');
+      if (!raw) { inp.value = ''; return; }
+      const num = parseFloat(raw);
+      if (isNaN(num)) { inp.value = ''; return; }
+      inp.value = num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    });
+  });
+
+  /* ---------- Helpers ---------- */
+  const FIELD_LABELS = {
+    p_ss: 'Social Security Benefit', s_ss: 'Social Security Benefit',
+    p_working: 'Working — Monthly Income', s_working: 'Working — Monthly Income',
+    p_401k_1: '401(k)/403(b) Balance #1', s_401k_1: '401(k)/403(b) Balance #1',
+    p_401k_2: '401(k)/403(b) Balance #2', s_401k_2: '401(k)/403(b) Balance #2',
+    p_ira_1: 'IRA Balance #1', s_ira_1: 'IRA Balance #1',
+    p_ira_2: 'IRA Balance #2', s_ira_2: 'IRA Balance #2',
+    p_inherited_ira: 'Inherited IRA', s_inherited_ira: 'Inherited IRA',
+    p_pension: 'Pension — Monthly', s_pension: 'Pension — Monthly'
+  };
+
+  function fmtDollar(v) {
+    if (!v) return '—';
+    const num = parseFloat(String(v).replace(/[^0-9.]/g, ''));
+    if (isNaN(num)) return '—';
+    return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  }
+
+  function isFormBlank(data) {
+    return FORM_FIELDS.every(id => {
+      const v = data[id];
+      return v === '' || v === false || v === undefined || v === null;
+    });
+  }
+
+  /* ---------- Build PDF with pdf-lib ---------- */
+  async function generatePdfBytes(data) {
+    const { PDFDocument, StandardFonts, rgb } = PDFLib;
+    const pdfDoc = await PDFDocument.create();
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    const navy = rgb(0x1a/255, 0x27/255, 0x44/255);
+    const gold = rgb(0xc9/255, 0xa8/255, 0x4c/255);
+    const lightGold = rgb(0xf5/255, 0xed/255, 0xda/255);
+    const grayText = rgb(0x22/255, 0x22/255, 0x22/255);
+    const muted = rgb(0x6b/255, 0x72/255, 0x80/255);
+    const border = rgb(0xdd/255, 0xe2/255, 0xec/255);
+
+    const pageW = 612, pageH = 792, margin = 50;
+    let page = pdfDoc.addPage([pageW, pageH]);
+    let y = pageH - margin;
+
+    function newPageIfNeeded(needed) {
+      if (y - needed < margin) {
+        page = pdfDoc.addPage([pageW, pageH]);
+        y = pageH - margin;
+      }
+    }
+
+    // Header band
+    page.drawRectangle({ x: 0, y: y - 6, width: pageW, height: 56, color: navy });
+    page.drawText('Retirement Right', { x: margin, y: y + 18, size: 16, font: bold, color: gold });
+    page.drawText('Pre-Appointment Information — Confidential', { x: margin, y: y + 2, size: 9, font, color: rgb(1,1,1) });
+    y -= 70;
+
+    const now = new Date();
+    page.drawText('Submitted ' + now.toLocaleString('en-US'), { x: margin, y, size: 9, font, color: muted });
+    y -= 22;
+
+    function sectionHeader(num, title) {
+      newPageIfNeeded(40);
+      page.drawRectangle({ x: margin, y: y - 20, width: pageW - margin * 2, height: 24, color: navy });
+      page.drawCircle({ x: margin + 14, y: y - 8, size: 8, color: gold });
+      page.drawText(String(num), { x: margin + 11, y: y - 11, size: 9, font: bold, color: rgb(0.1,0.1,0.1) });
+      page.drawText(title, { x: margin + 30, y: y - 11, size: 11, font: bold, color: rgb(1,1,1) });
+      y -= 32;
+    }
+
+    function row(label, value) {
+      newPageIfNeeded(20);
+      page.drawText(label, { x: margin, y, size: 9.5, font, color: grayText });
+      const valW = font.widthOfTextAtSize(value, 9.5);
+      page.drawText(value, { x: pageW - margin - valW, y, size: 9.5, font: bold, color: navy });
+      page.drawLine({ start: { x: margin, y: y - 4 }, end: { x: pageW - margin, y: y - 4 }, thickness: 0.5, color: border });
+      y -= 18;
+    }
+
+    function twoColRow(label, pVal, sVal) {
+      newPageIfNeeded(20);
+      const col1 = pageW - margin - 160;
+      const col2 = pageW - margin - 60;
+      page.drawText(label, { x: margin, y, size: 9.5, font, color: grayText });
+      const pW = font.widthOfTextAtSize(pVal, 9.5);
+      const sW = font.widthOfTextAtSize(sVal, 9.5);
+      page.drawText(pVal, { x: col1 - pW + 50, y, size: 9.5, font: bold, color: navy });
+      page.drawText(sVal, { x: col2 - sW + 50, y, size: 9.5, font: bold, color: navy });
+      page.drawLine({ start: { x: margin, y: y - 4 }, end: { x: pageW - margin, y: y - 4 }, thickness: 0.5, color: border });
+      y -= 18;
+    }
+
+    // Section 1
+    sectionHeader(1, 'Personal Information');
+    row('Principal Name', data.p_name || '—');
+    row('Principal Age / DOB', (data.p_age || '—') + ' / ' + (data.p_dob || '—'));
+    row('Spouse Name', data.s_name || '—');
+    row('Spouse Age / DOB', (data.s_age || '—') + ' / ' + (data.s_dob || '—'));
+    row('Email', data.email || '—');
+    row('Phone', data.phone || '—');
+    y -= 10;
+
+    // Section 2
+    sectionHeader(2, 'Individual Retirement Assets');
+    newPageIfNeeded(16);
+    page.drawText('', { x: margin, y, size: 8, font });
+    page.drawText('Principal', { x: pageW - margin - 150, y, size: 8, font: bold, color: muted });
+    page.drawText('Spouse', { x: pageW - margin - 50, y, size: 8, font: bold, color: muted });
+    y -= 14;
+
+    twoColRow('Social Security Benefit', fmtDollar(data.p_ss), fmtDollar(data.s_ss));
+    twoColRow('Currently Collecting SS?', data.p_ss_collecting || '—', data.s_ss_collecting || '—');
+    twoColRow('Working — Monthly Income', fmtDollar(data.p_working), fmtDollar(data.s_working));
+    twoColRow('401(k)/403(b) Balance #1', fmtDollar(data.p_401k_1), fmtDollar(data.s_401k_1));
+    twoColRow('401(k)/403(b) Balance #2', fmtDollar(data.p_401k_2), fmtDollar(data.s_401k_2));
+    twoColRow('IRA Balance #1', fmtDollar(data.p_ira_1), fmtDollar(data.s_ira_1));
+    twoColRow('IRA Balance #2', fmtDollar(data.p_ira_2), fmtDollar(data.s_ira_2));
+    twoColRow('Inherited IRA', fmtDollar(data.p_inherited_ira), fmtDollar(data.s_inherited_ira));
+    twoColRow('Pension — Monthly', fmtDollar(data.p_pension), fmtDollar(data.s_pension));
+    y -= 10;
+
+    // Section 3
+    sectionHeader(3, 'Joint Liquid Assets');
+    row('Bank / Savings', fmtDollar(data.savings));
+    row('Investments / Brokerage', fmtDollar(data.investments));
+    row('Annuities', fmtDollar(data.annuities));
+    row('Life Insurance CSV', fmtDollar(data.life_ins));
+    y -= 10;
+
+    // Section 4
+    sectionHeader(4, 'Estate Planning');
+    const estItems = [];
+    if (data.est_trust) estItems.push('Trust or Will');
+    if (data.est_poa) estItems.push('Powers of Attorney');
+    if (data.est_living_will) estItems.push('Living Will');
+    if (data.est_planning_done) estItems.push('Retirement planning done');
+    row('Documents in Place', estItems.length ? estItems.join(', ') : 'None indicated');
+
+    y -= 20;
+    newPageIfNeeded(30);
+    page.drawText('CONFIDENTIAL — For Planning Purposes Only. This form does not constitute investment, legal, or tax advice.', {
+      x: margin, y, size: 7.5, font, color: muted
+    });
+
+    return await pdfDoc.save();
+  }
+
+  function uint8ToBase64(bytes) {
+    let binary = '';
+    const chunkSize = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+    }
+    return btoa(binary);
+  }
+
+  /* ---------- Submit ---------- */
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = collectData();
+    const msg = document.getElementById('submit-msg');
+    const btn = document.getElementById('submit-btn');
+    msg.className = '';
+    msg.textContent = '';
+
+    if (isFormBlank(data)) {
+      msg.className = 'error';
+      msg.textContent = 'Your form appears to be blank. Please fill in at least your name and one other field before submitting.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    try {
+      const pdfBytes = await generatePdfBytes(data);
+      const pdfBase64 = uint8ToBase64(pdfBytes);
+      const clientName = (data.p_name || 'client').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+
+      const payload = {
+        access_key: '07e7ab7a-15c7-49af-aea6-a97fbc690fa6',
+        subject: `Pre-Appointment Form — ${data.p_name || 'New Client'}`,
+        from_name: 'Retirement Right Intake Form',
+        email: data.email || undefined,
+        message: `New Pre-Appointment form submitted by ${data.p_name || 'a client'}. Full details are in the attached PDF.`,
+        attachments: [{
+          filename: `Pre-Appointment_${clientName}.pdf`,
+          data: pdfBase64
+        }]
+      };
+
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+
+      if (res.ok && result.success) {
+        document.getElementById('success-modal').classList.add('open');
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+        form.reset();
+      } else {
+        throw new Error(result.message || 'Server error');
+      }
+    } catch(err) {
+      msg.className = 'error';
+      msg.textContent = 'Something went wrong — please call 602-598-2992 or email michael@retirement-right.com directly.';
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '📤 Submit to Advisor';
+    }
+  });
 </script>
 </body>
 </html>
