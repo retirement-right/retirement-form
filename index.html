@@ -506,15 +506,6 @@
     return await pdfDoc.save();
   }
 
-  function uint8ToBase64(bytes) {
-    let binary = '';
-    const chunkSize = 0x8000;
-    for (let i = 0; i < bytes.length; i += chunkSize) {
-      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
-    }
-    return btoa(binary);
-  }
-
   /* ---------- Submit ---------- */
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -535,25 +526,26 @@
 
     try {
       const pdfBytes = await generatePdfBytes(data);
-      const pdfBase64 = uint8ToBase64(pdfBytes);
+      const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
       const clientName = (data.p_name || 'client').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+      const pdfFilename = `Pre-Appointment_${clientName}.pdf`;
 
-      const payload = {
-        access_key: '07e7ab7a-15c7-49af-aea6-a97fbc690fa6',
-        subject: `Pre-Appointment Form — ${data.p_name || 'New Client'}`,
-        from_name: 'Retirement Right Intake Form',
-        email: data.email || undefined,
-        message: `New Pre-Appointment form submitted by ${data.p_name || 'a client'}. Full details are in the attached PDF.`,
-        attachments: [{
-          filename: `Pre-Appointment_${clientName}.pdf`,
-          data: pdfBase64
-        }]
-      };
+      // Web3Forms requires real multipart/form-data for file attachments —
+      // a JSON base64 "attachments" field is not supported and will show as [object Object].
+      const fd = new FormData();
+      fd.append('access_key', '07e7ab7a-15c7-49af-aea6-a97fbc690fa6');
+      fd.append('subject', `Pre-Appointment Form — ${data.p_name || 'New Client'}`);
+      fd.append('from_name', 'Retirement Right Intake Form');
+      if (data.email) fd.append('email', data.email);
+      fd.append('message', `New Pre-Appointment form submitted by ${data.p_name || 'a client'}. Full details are in the attached PDF.`);
+      // Also send raw field values in case you want them searchable/sortable later
+      FORM_FIELDS.forEach(id => fd.append(id, data[id] === true ? 'Yes' : (data[id] === false ? '' : data[id])));
+      fd.append('attachment', pdfBlob, pdfFilename);
 
+      // Do NOT set Content-Type — the browser sets the correct multipart boundary automatically.
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(payload)
+        body: fd
       });
       const result = await res.json();
 
