@@ -366,7 +366,8 @@ async function submitForm() {
   btn.textContent = 'Sending…';
 
   const payload = {
-    _subject: `Pre-Appointment Form — ${data.p_name || 'New Client'}`,
+    access_key: '07e7ab7a-15c7-49af-aea6-a97fbc690fa6',
+    subject: `Pre-Appointment Form — ${data.p_name || 'New Client'}`,
     'Principal Name': data.p_name || '—',
     'Principal Age': data.p_age || '—',
     'Principal DOB': data.p_dob || '—',
@@ -404,12 +405,13 @@ async function submitForm() {
   };
 
   try {
-    const res = await fetch('https://formspree.io/f/mgobjnjj', {
+    const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (res.ok) {
+    const result = await res.json();
+    if (res.ok && result.success) {
       document.getElementById('success-modal').classList.add('open');
       try { localStorage.removeItem('rr_preappt'); } catch(e) {}
     } else {
@@ -418,7 +420,7 @@ async function submitForm() {
   } catch(e) {
     const msg = document.getElementById('submit-msg');
     msg.className = 'error';
-    msg.textContent = 'Something went wrong — please call 480-221-4264 or email michaeleberhardt01@gmail.com directly.';
+    msg.textContent = 'Something went wrong — please call 602-598-2992 or email michael@retirement-right.com directly.';
   }
 
   btn.disabled = false;
