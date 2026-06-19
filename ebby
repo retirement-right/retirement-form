@@ -103,7 +103,7 @@
 
   <div class="banner">
     <h2>Complete this form to receive your complimentary Retirement Readiness Overview.</h2>
-    <p>By sharing a few key numbers, you give Ebby the information needed to provide a meaningful, personalized assessment of where you stand — at no cost and no obligation. Your information is kept strictly confidential and used solely to prepare for your conversation.</p>
+    <p>By sharing a few key numbers, you give Retirement-Right the information needed to provide a meaningful, personalized assessment of where you stand — at no cost and no obligation. Your information is kept strictly confidential and used solely to prepare for your conversation.</p>
     <small>Fields marked optional may be left blank — complete what you know.</small>
   </div>
 
@@ -414,6 +414,86 @@ window.addEventListener('DOMContentLoaded', () => {
 // ── SUBMIT ─────────────────────────────────────────────────
 function fmt(val) { return val ? `$${Number(rawDollar(val)).toLocaleString('en-US')}` : '—'; }
 
+function buildEmailHTML(data) {
+  const row = (label, val) => `
+    <tr>
+      <td style="padding:6px 10px;font-size:13px;color:#222;border-bottom:1px solid #e5e7eb;">${label}</td>
+      <td style="padding:6px 10px;font-size:13px;color:#1a2744;font-weight:600;border-bottom:1px solid #e5e7eb;text-align:right;">${val}</td>
+    </tr>`;
+  const sectionHdr = (num, title) => `
+    <tr>
+      <td colspan="2" style="background:#1a2744;color:#fff;font-size:13px;font-weight:700;padding:10px 14px;border-radius:6px 6px 0 0;">
+        <span style="background:#c9a84c;color:#1a1a1a;border-radius:50%;display:inline-block;width:20px;height:20px;text-align:center;line-height:20px;font-size:11px;margin-right:8px;">${num}</span>${title}
+      </td>
+    </tr>`;
+  const twoColRow = (label, pVal, sVal) => `
+    <tr>
+      <td style="padding:6px 10px;font-size:13px;color:#222;border-bottom:1px solid #e5e7eb;">${label}</td>
+      <td style="padding:6px 10px;font-size:13px;color:#1a2744;font-weight:600;border-bottom:1px solid #e5e7eb;text-align:right;">${pVal}</td>
+      <td style="padding:6px 10px;font-size:13px;color:#1a2744;font-weight:600;border-bottom:1px solid #e5e7eb;text-align:right;">${sVal}</td>
+    </tr>`;
+  const twoColHdr = () => `
+    <tr style="background:#f5edda;">
+      <td style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;"></td>
+      <td style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;text-align:right;">Principal</td>
+      <td style="padding:6px 10px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;text-align:right;">Spouse</td>
+    </tr>`;
+
+  return `
+  <div style="font-family:-apple-system,Segoe UI,sans-serif;max-width:640px;margin:0 auto;background:#f7f8fa;padding:20px;">
+
+    <div style="background:#1a2744;border-radius:10px 10px 0 0;padding:18px 20px;">
+      <div style="color:#c9a84c;font-size:18px;font-weight:700;letter-spacing:.02em;">Retirement Right</div>
+      <div style="color:#fff;opacity:.75;font-size:12px;margin-top:2px;">Pre-Appointment Information — Confidential</div>
+    </div>
+
+    <div style="background:#f5edda;border:1px solid #c9a84c;border-top:none;padding:14px 20px;font-size:12px;color:#5a4a1a;">
+      Submitted ${new Date().toLocaleString()}
+    </div>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #dde2ec;border-top:none;margin-bottom:16px;">
+      ${sectionHdr(1, 'Personal Information')}
+      ${row('Principal Name', data.p_name || '—')}
+      ${row('Principal Age / DOB', `${data.p_age || '—'} / ${data.p_dob || '—'}`)}
+      ${row('Spouse Name', data.s_name || '—')}
+      ${row('Spouse Age / DOB', `${data.s_age || '—'} / ${data.s_dob || '—'}`)}
+      ${row('Email', data.p_email || '—')}
+      ${row('Phone', data.p_phone || '—')}
+    </table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #dde2ec;border-top:none;margin-bottom:16px;">
+      ${sectionHdr(2, 'Individual Retirement Assets')}
+      ${twoColHdr()}
+      ${twoColRow('Social Security Benefit', fmt(data.ss_p), fmt(data.ss_s))}
+      ${twoColRow('Currently Collecting SS?', data.ss_collecting_p === 'true' ? 'Yes' : 'No', data.ss_collecting_s === 'true' ? 'Yes' : 'No')}
+      ${twoColRow('Working — Monthly Income', fmt(data.work_p), fmt(data.work_s))}
+      ${twoColRow('401(k)/403(b) Balance #1', fmt(data.k401_p1), fmt(data.k401_s1))}
+      ${twoColRow('401(k)/403(b) Balance #2', fmt(data.k401_p2), fmt(data.k401_s2))}
+      ${twoColRow('IRA Balance #1', fmt(data.ira_p1), fmt(data.ira_s1))}
+      ${twoColRow('IRA Balance #2', fmt(data.ira_p2), fmt(data.ira_s2))}
+      ${twoColRow('Inherited IRA', fmt(data.ira_inh_p), fmt(data.ira_inh_s))}
+      ${twoColRow('Pension — Monthly', fmt(data.pension_p), fmt(data.pension_s))}
+    </table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #dde2ec;border-top:none;margin-bottom:16px;">
+      ${sectionHdr(3, 'Joint Liquid Assets')}
+      ${row('Bank / Savings', fmt(data.joint_savings))}
+      ${row('Investments / Brokerage', fmt(data.joint_investments))}
+      ${row('Annuities', fmt(data.joint_annuity))}
+      ${row('Life Insurance CSV', fmt(data.joint_lifeins))}
+    </table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #dde2ec;border-top:none;margin-bottom:16px;">
+      ${sectionHdr(4, 'Estate Planning')}
+      ${row('Documents in Place', (data.estate || []).join(', ') || 'None indicated')}
+    </table>
+
+    <div style="text-align:center;font-size:11px;color:#6b7280;padding:10px;">
+      CONFIDENTIAL — For Planning Purposes Only. This form does not constitute investment, legal, or tax advice.
+    </div>
+  </div>`;
+}
+
 async function submitForm() {
   const data = collectData();
   const filled = Object.values(data).filter(v => Array.isArray(v) ? v.length : v !== '').length;
@@ -433,42 +513,8 @@ async function submitForm() {
       access_key: '07e7ab7a-15c7-49af-aea6-a97fbc690fa6',
       subject: `Pre-Appointment Form — ${data.p_name || 'New Client'}`,
       from_name: 'Retirement Right Intake Form',
-      'Submitted At': new Date().toLocaleString(),
-      '— SECTION 1: PERSONAL INFORMATION —': '',
-      'Principal Name': data.p_name || '—',
-      'Principal Age': data.p_age || '—',
-      'Principal DOB': data.p_dob || '—',
-      'Spouse Name': data.s_name || '—',
-      'Spouse Age': data.s_age || '—',
-      'Spouse DOB': data.s_dob || '—',
-      'Email': data.p_email || '—',
-      'Phone': data.p_phone || '—',
-      '— SECTION 2: INDIVIDUAL RETIREMENT ASSETS —': '',
-      'SS Benefit Amount (Principal)': fmt(data.ss_p),
-      'SS Benefit Amount (Spouse)': fmt(data.ss_s),
-      'SS Currently Collecting (Principal)': data.ss_collecting_p === 'true' ? 'Yes' : 'No',
-      'SS Currently Collecting (Spouse)': data.ss_collecting_s === 'true' ? 'Yes' : 'No',
-      'Working Income Monthly (Principal)': fmt(data.work_p),
-      'Working Income Monthly (Spouse)': fmt(data.work_s),
-      '401k Balance #1 (Principal)': fmt(data.k401_p1),
-      '401k Balance #1 (Spouse)': fmt(data.k401_s1),
-      '401k Balance #2 (Principal)': fmt(data.k401_p2),
-      '401k Balance #2 (Spouse)': fmt(data.k401_s2),
-      'IRA Balance #1 (Principal)': fmt(data.ira_p1),
-      'IRA Balance #1 (Spouse)': fmt(data.ira_s1),
-      'IRA Balance #2 (Principal)': fmt(data.ira_p2),
-      'IRA Balance #2 (Spouse)': fmt(data.ira_s2),
-      'Inherited IRA (Principal)': fmt(data.ira_inh_p),
-      'Inherited IRA (Spouse)': fmt(data.ira_inh_s),
-      'Pension Monthly (Principal)': fmt(data.pension_p),
-      'Pension Monthly (Spouse)': fmt(data.pension_s),
-      '— SECTION 3: JOINT LIQUID ASSETS —': '',
-      'Bank / Savings': fmt(data.joint_savings),
-      'Investments / Brokerage': fmt(data.joint_investments),
-      'Annuities': fmt(data.joint_annuity),
-      'Life Insurance CSV': fmt(data.joint_lifeins),
-      '— SECTION 4: ESTATE PLANNING —': '',
-      'Documents in Place': (data.estate || []).join(', ') || 'None indicated'
+      email: data.p_email || undefined,
+      message: buildEmailHTML(data)
     };
 
     const res = await fetch('https://api.web3forms.com/submit', {
