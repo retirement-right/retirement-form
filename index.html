@@ -524,8 +524,19 @@
     btn.disabled = true;
     btn.textContent = 'Submitting…';
 
+    let pdfBytes;
     try {
-      const pdfBytes = await generatePdfBytes(data);
+      pdfBytes = await generatePdfBytes(data);
+    } catch(err) {
+      msg.className = 'error';
+      msg.textContent = 'PDF generation failed (' + (err && err.message ? err.message : err) + '). Please call 602-598-2992 or email michael@retirement-right.com directly.';
+      console.error('PDF generation error:', err);
+      btn.disabled = false;
+      btn.textContent = '📤 Submit to Advisor';
+      return;
+    }
+
+    try {
       const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
       const clientName = (data.p_name || 'client').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
       const pdfFilename = `Pre-Appointment_${clientName}.pdf`;
@@ -547,19 +558,27 @@
         method: 'POST',
         body: fd
       });
-      const result = await res.json();
+
+      const rawText = await res.text();
+      let result;
+      try {
+        result = JSON.parse(rawText);
+      } catch(parseErr) {
+        throw new Error('HTTP ' + res.status + ' — non-JSON response: ' + rawText.slice(0, 200));
+      }
 
       if (res.ok && result.success) {
         document.getElementById('success-modal').classList.add('open');
         try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
         form.reset();
       } else {
-        throw new Error(result.message || 'Server error');
+        throw new Error('HTTP ' + res.status + ' — ' + (result.message || JSON.stringify(result)));
       }
     } catch(err) {
       msg.className = 'error';
-      msg.textContent = 'Something went wrong — please call 602-598-2992 or email michael@retirement-right.com directly.';
-      console.error(err);
+      const detail = (err && err.message) ? err.message : String(err);
+      msg.textContent = 'Something went wrong (' + detail + ') — please call 602-598-2992 or email michael@retirement-right.com directly.';
+      console.error('Submission error:', err);
     } finally {
       btn.disabled = false;
       btn.textContent = '📤 Submit to Advisor';
