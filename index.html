@@ -379,6 +379,7 @@ async function submitForm() {
     '-- RETIREMENT ASSETS --': '',
     'SS Collecting (Principal)': data.ss_collecting_p === 'true' ? 'Yes' : 'No',
     'SS Collecting (Spouse)': data.ss_collecting_s === 'true' ? 'Yes' : 'No',
+    'SS FRA (Principal)': data.ss_p ? `$${data.ss_p}` : '—',
     'SS FRA (Spouse)': data.ss_s ? `$${data.ss_s}` : '—',
     'Working Income (Principal)': data.work_p ? `$${data.work_p}` : '—',
     'Working Income (Spouse)': data.work_s ? `$${data.work_s}` : '—',
