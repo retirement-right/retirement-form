@@ -312,6 +312,21 @@
   const indicator = document.getElementById('autosave-indicator');
 
   /* ---------- Autosave to localStorage ---------- */
+  function normalizeDob(raw) {
+    if (!raw) return raw;
+    // Expect YYYY-MM-DD from <input type="date">. Guard against truncated/garbled years
+    // (browsers can occasionally commit a partial year like "0060" mid-keystroke).
+    const m = String(raw).match(/^(\d{1,4})-(\d{2})-(\d{2})$/);
+    if (!m) return raw;
+    let [, yyyy, mm, dd] = m;
+    const year = parseInt(yyyy, 10);
+    // A valid birth year for this form is realistically 1900-2026. If outside that range,
+    // the value is almost certainly corrupted input, not a real date — flag it instead of
+    // silently shipping a wrong date.
+    if (year < 1900 || year > 2026) return raw + ' (please re-check)';
+    return yyyy.padStart(4, '0') + '-' + mm + '-' + dd;
+  }
+
   function collectData() {
     const data = {};
     FORM_FIELDS.forEach(id => {
@@ -319,6 +334,9 @@
       if (!el) return;
       data[id] = el.type === 'checkbox' ? el.checked : el.value;
     });
+    data.p_dob = normalizeDob(data.p_dob);
+    data.s_dob = normalizeDob(data.s_dob);
+    if (data.phone) data.phone = formatPhone(data.phone);
     return data;
   }
 
@@ -358,6 +376,19 @@
       inp.value = num.toLocaleString('en-US', { maximumFractionDigits: 0 });
     });
   });
+
+  /* ---------- Phone formatting on blur: digits -> (XXX) XXX-XXXX ---------- */
+  function formatPhone(raw) {
+    const digits = String(raw || '').replace(/\D/g, '').slice(0, 10);
+    if (digits.length < 10) return raw; // leave partial/invalid input untouched rather than guess
+    return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+  }
+  const phoneInput = document.getElementById('phone');
+  if (phoneInput) {
+    phoneInput.addEventListener('blur', () => {
+      phoneInput.value = formatPhone(phoneInput.value);
+    });
+  }
 
   /* ---------- Helpers ---------- */
   const FIELD_LABELS = {
