@@ -103,7 +103,6 @@
 
   footer { text-align: center; font-size: .75rem; color: var(--muted); padding: 20px; border-top: 1px solid var(--border); margin-top: 8px; }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -349,153 +348,6 @@ window.addEventListener('DOMContentLoaded', () => {
   } catch(e) {}
 });
 
-// ── PDF GENERATION ───────────────────────────────────────────
-function generatePDF(data) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const navy = [26, 39, 68];
-  const gold = [201, 168, 76];
-  const gray = [107, 114, 128];
-  let y = 20;
-
-  function header(text) {
-    doc.setFillColor(...navy);
-    doc.rect(15, y, 180, 9, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'bold');
-    doc.text(text, 18, y + 6.3);
-    y += 14;
-  }
-  function row(label, p, s) {
-    doc.setTextColor(40, 40, 40);
-    doc.setFont(undefined, 'normal');
-    doc.setFontSize(9.5);
-    doc.text(label, 18, y);
-    doc.setFont(undefined, 'bold');
-    doc.text(String(p), 130, y);
-    doc.text(String(s), 165, y);
-    doc.setFont(undefined, 'normal');
-    y += 6.5;
-  }
-  function simpleRow(label, val) {
-    doc.setTextColor(40, 40, 40);
-    doc.setFontSize(9.5);
-    doc.text(label, 18, y);
-    doc.setFont(undefined, 'bold');
-    doc.text(String(val), 100, y);
-    doc.setFont(undefined, 'normal');
-    y += 6.5;
-  }
-
-  // Title
-  doc.setTextColor(...navy);
-  doc.setFontSize(16);
-  doc.setFont(undefined, 'bold');
-  doc.text('Retirement Right — Pre-Appointment Information', 18, y);
-  y += 6;
-  doc.setFontSize(9);
-  doc.setTextColor(...gray);
-  doc.setFont(undefined, 'normal');
-  doc.text(`Submitted: ${new Date().toLocaleString()}`, 18, y);
-  y += 10;
-
-  // Section 1
-  header('1 — Personal Information');
-  simpleRow('Principal:', `${data.p_name || '—'}   Age: ${data.p_age || '—'}   DOB: ${data.p_dob || '—'}`);
-  simpleRow('Spouse:', `${data.s_name || '—'}   Age: ${data.s_age || '—'}   DOB: ${data.s_dob || '—'}`);
-  simpleRow('Email:', data.p_email || '—');
-  simpleRow('Phone:', data.p_phone || '—');
-  y += 4;
-
-  // Section 2
-  header('2 — Individual Retirement Assets');
-  doc.setFont(undefined, 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(...navy);
-  doc.text('', 18, y);
-  doc.text('PRINCIPAL', 130, y);
-  doc.text('SPOUSE', 165, y);
-  y += 6;
-  row('SS Benefit Amount', data.ss_p ? `$${data.ss_p}` : '—', data.ss_s ? `$${data.ss_s}` : '—');
-  row('  Currently Collecting?', data.ss_collecting_p === 'true' ? 'Yes' : 'No', data.ss_collecting_s === 'true' ? 'Yes' : 'No');
-  row('Working — Monthly Income', data.work_p ? `$${data.work_p}` : '—', data.work_s ? `$${data.work_s}` : '—');
-  row('401(k) Balance #1', data.k401_p1 ? `$${data.k401_p1}` : '—', data.k401_s1 ? `$${data.k401_s1}` : '—');
-  row('401(k) Balance #2', data.k401_p2 ? `$${data.k401_p2}` : '—', data.k401_s2 ? `$${data.k401_s2}` : '—');
-  row('IRA Balance #1', data.ira_p1 ? `$${data.ira_p1}` : '—', data.ira_s1 ? `$${data.ira_s1}` : '—');
-  row('IRA Balance #2', data.ira_p2 ? `$${data.ira_p2}` : '—', data.ira_s2 ? `$${data.ira_s2}` : '—');
-  row('Inherited IRA', data.ira_inh_p ? `$${data.ira_inh_p}` : '—', data.ira_inh_s ? `$${data.ira_inh_s}` : '—');
-  row('Pension — Monthly', data.pension_p ? `$${data.pension_p}` : '—', data.pension_s ? `$${data.pension_s}` : '—');
-  y += 4;
-
-  // Section 3
-  header('3 — Joint Liquid Assets');
-  simpleRow('Bank / Savings:', data.joint_savings ? `$${data.joint_savings}` : '—');
-  simpleRow('Investments / Brokerage:', data.joint_investments ? `$${data.joint_investments}` : '—');
-  simpleRow('Annuities:', data.joint_annuity ? `$${data.joint_annuity}` : '—');
-  simpleRow('Life Insurance CSV:', data.joint_lifeins ? `$${data.joint_lifeins}` : '—');
-  y += 4;
-
-  // Section 4
-  header('4 — Estate Planning');
-  simpleRow('Documents in Place:', (data.estate || []).join(', ') || 'None indicated');
-
-  // Footer
-  doc.setFontSize(7.5);
-  doc.setTextColor(...gray);
-  doc.text('CONFIDENTIAL — For Planning Purposes Only. Retirement Right.', 18, 285);
-
-  return doc.output('datauristring').split(',')[1]; // base64 only
-}
-
-// ── HTML EMAIL BODY ──────────────────────────────────────────
-function buildEmailHTML(data) {
-  const navy = '#1a2744', gold = '#c9a84c', lightGold = '#f5edda', border = '#dde2ec';
-  function sectionHeader(num, title) {
-    return `<tr><td colspan="3" style="background:${navy};color:#fff;padding:10px 14px;font-weight:bold;font-size:14px;border-radius:6px 6px 0 0">${num} — ${title}</td></tr>`;
-  }
-  function row(label, p, s) {
-    return `<tr><td style="padding:6px 14px;font-size:13px;color:#333;border-bottom:1px solid ${border}">${label}</td><td style="padding:6px 14px;font-size:13px;font-weight:bold;color:${navy};border-bottom:1px solid ${border};text-align:center">${p}</td><td style="padding:6px 14px;font-size:13px;font-weight:bold;color:${navy};border-bottom:1px solid ${border};text-align:center">${s}</td></tr>`;
-  }
-  function simpleRow(label, val) {
-    return `<tr><td style="padding:6px 14px;font-size:13px;color:#333;border-bottom:1px solid ${border}">${label}</td><td colspan="2" style="padding:6px 14px;font-size:13px;font-weight:bold;color:${navy};border-bottom:1px solid ${border}">${val}</td></tr>`;
-  }
-
-  return `
-  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
-    <div style="background:${navy};color:${gold};padding:18px;border-radius:8px 8px 0 0">
-      <h2 style="margin:0;font-size:18px">Retirement Right — Pre-Appointment Form</h2>
-      <p style="margin:4px 0 0;color:#fff;opacity:.7;font-size:12px">Submitted ${new Date().toLocaleString()}</p>
-    </div>
-    <table style="width:100%;border-collapse:collapse;border:1px solid ${border}">
-      ${sectionHeader(1, 'Personal Information')}
-      ${simpleRow('Principal', `${data.p_name || '—'} &nbsp;|&nbsp; Age: ${data.p_age || '—'} &nbsp;|&nbsp; DOB: ${data.p_dob || '—'}`)}
-      ${simpleRow('Spouse', `${data.s_name || '—'} &nbsp;|&nbsp; Age: ${data.s_age || '—'} &nbsp;|&nbsp; DOB: ${data.s_dob || '—'}`)}
-      ${simpleRow('Email', data.p_email || '—')}
-      ${simpleRow('Phone', data.p_phone || '—')}
-      ${sectionHeader(2, 'Individual Retirement Assets')}
-      <tr><td></td><td style="text-align:center;font-size:11px;font-weight:bold;color:${navy};padding-top:8px">PRINCIPAL</td><td style="text-align:center;font-size:11px;font-weight:bold;color:${navy};padding-top:8px">SPOUSE</td></tr>
-      ${row('SS Benefit Amount', data.ss_p ? `$${data.ss_p}` : '—', data.ss_s ? `$${data.ss_s}` : '—')}
-      ${row('Currently Collecting?', data.ss_collecting_p === 'true' ? 'Yes' : 'No', data.ss_collecting_s === 'true' ? 'Yes' : 'No')}
-      ${row('Working — Monthly Income', data.work_p ? `$${data.work_p}` : '—', data.work_s ? `$${data.work_s}` : '—')}
-      ${row('401(k) #1', data.k401_p1 ? `$${data.k401_p1}` : '—', data.k401_s1 ? `$${data.k401_s1}` : '—')}
-      ${row('401(k) #2', data.k401_p2 ? `$${data.k401_p2}` : '—', data.k401_s2 ? `$${data.k401_s2}` : '—')}
-      ${row('IRA #1', data.ira_p1 ? `$${data.ira_p1}` : '—', data.ira_s1 ? `$${data.ira_s1}` : '—')}
-      ${row('IRA #2', data.ira_p2 ? `$${data.ira_p2}` : '—', data.ira_s2 ? `$${data.ira_s2}` : '—')}
-      ${row('Inherited IRA', data.ira_inh_p ? `$${data.ira_inh_p}` : '—', data.ira_inh_s ? `$${data.ira_inh_s}` : '—')}
-      ${row('Pension — Monthly', data.pension_p ? `$${data.pension_p}` : '—', data.pension_s ? `$${data.pension_s}` : '—')}
-      ${sectionHeader(3, 'Joint Liquid Assets')}
-      ${simpleRow('Bank / Savings', data.joint_savings ? `$${data.joint_savings}` : '—')}
-      ${simpleRow('Investments / Brokerage', data.joint_investments ? `$${data.joint_investments}` : '—')}
-      ${simpleRow('Annuities', data.joint_annuity ? `$${data.joint_annuity}` : '—')}
-      ${simpleRow('Life Insurance CSV', data.joint_lifeins ? `$${data.joint_lifeins}` : '—')}
-      ${sectionHeader(4, 'Estate Planning')}
-      ${simpleRow('Documents in Place', (data.estate || []).join(', ') || 'None indicated')}
-    </table>
-    <p style="font-size:11px;color:#888;text-align:center;margin-top:14px">CONFIDENTIAL — For Planning Purposes Only. A PDF copy is attached.</p>
-  </div>`;
-}
-
 // ── SUBMIT ─────────────────────────────────────────────────
 async function submitForm() {
   const data = collectData();
@@ -514,19 +366,48 @@ async function submitForm() {
   btn.textContent = 'Sending…';
 
   try {
-    const pdfBase64 = generatePDF(data);
-    const htmlBody = buildEmailHTML(data);
     const clientName = (data.p_name || 'client').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
 
     const payload = {
       access_key: '07e7ab7a-15c7-49af-aea6-a97fbc690fa6',
       subject: `Pre-Appointment Form — ${data.p_name || 'New Client'}`,
       from_name: 'Retirement Right Intake Form',
-      message: htmlBody,
-      attachments: [{
-        filename: `Pre-Appointment_${clientName}.pdf`,
-        data: pdfBase64
-      }]
+      'Submitted At': new Date().toLocaleString(),
+      '— SECTION 1: PERSONAL INFORMATION —': '',
+      'Principal Name': data.p_name || '—',
+      'Principal Age': data.p_age || '—',
+      'Principal DOB': data.p_dob || '—',
+      'Spouse Name': data.s_name || '—',
+      'Spouse Age': data.s_age || '—',
+      'Spouse DOB': data.s_dob || '—',
+      'Email': data.p_email || '—',
+      'Phone': data.p_phone || '—',
+      '— SECTION 2: INDIVIDUAL RETIREMENT ASSETS —': '',
+      'SS Benefit Amount (Principal)': data.ss_p ? `$${data.ss_p}` : '—',
+      'SS Benefit Amount (Spouse)': data.ss_s ? `$${data.ss_s}` : '—',
+      'SS Currently Collecting (Principal)': data.ss_collecting_p === 'true' ? 'Yes' : 'No',
+      'SS Currently Collecting (Spouse)': data.ss_collecting_s === 'true' ? 'Yes' : 'No',
+      'Working Income Monthly (Principal)': data.work_p ? `$${data.work_p}` : '—',
+      'Working Income Monthly (Spouse)': data.work_s ? `$${data.work_s}` : '—',
+      '401k Balance #1 (Principal)': data.k401_p1 ? `$${data.k401_p1}` : '—',
+      '401k Balance #1 (Spouse)': data.k401_s1 ? `$${data.k401_s1}` : '—',
+      '401k Balance #2 (Principal)': data.k401_p2 ? `$${data.k401_p2}` : '—',
+      '401k Balance #2 (Spouse)': data.k401_s2 ? `$${data.k401_s2}` : '—',
+      'IRA Balance #1 (Principal)': data.ira_p1 ? `$${data.ira_p1}` : '—',
+      'IRA Balance #1 (Spouse)': data.ira_s1 ? `$${data.ira_s1}` : '—',
+      'IRA Balance #2 (Principal)': data.ira_p2 ? `$${data.ira_p2}` : '—',
+      'IRA Balance #2 (Spouse)': data.ira_s2 ? `$${data.ira_s2}` : '—',
+      'Inherited IRA (Principal)': data.ira_inh_p ? `$${data.ira_inh_p}` : '—',
+      'Inherited IRA (Spouse)': data.ira_inh_s ? `$${data.ira_inh_s}` : '—',
+      'Pension Monthly (Principal)': data.pension_p ? `$${data.pension_p}` : '—',
+      'Pension Monthly (Spouse)': data.pension_s ? `$${data.pension_s}` : '—',
+      '— SECTION 3: JOINT LIQUID ASSETS —': '',
+      'Bank / Savings': data.joint_savings ? `$${data.joint_savings}` : '—',
+      'Investments / Brokerage': data.joint_investments ? `$${data.joint_investments}` : '—',
+      'Annuities': data.joint_annuity ? `$${data.joint_annuity}` : '—',
+      'Life Insurance CSV': data.joint_lifeins ? `$${data.joint_lifeins}` : '—',
+      '— SECTION 4: ESTATE PLANNING —': '',
+      'Documents in Place': (data.estate || []).join(', ') || 'None indicated'
     };
 
     const res = await fetch('https://api.web3forms.com/submit', {
