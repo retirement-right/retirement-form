@@ -185,11 +185,11 @@
             <td class="dollar-wrap"><input type="text" inputmode="numeric" id="p_working" name="p_working" placeholder="0"></td>
             <td class="dollar-wrap"><input type="text" inputmode="numeric" id="s_working" name="s_working" placeholder="0"></td>
           </tr>
-          <!-- NEW: Income Need in Retirement -->
+          <!-- Income Need: single combined field -->
           <tr class="highlight-row">
-            <td>💡 Income Need in Retirement — Monthly</td>
+            <td>Estimated Income Need in Retirement — Monthly?</td>
             <td class="dollar-wrap"><input type="text" inputmode="numeric" id="p_income_need" name="p_income_need" placeholder="0"></td>
-            <td class="dollar-wrap"><input type="text" inputmode="numeric" id="s_income_need" name="s_income_need" placeholder="0"></td>
+            <td></td>
           </tr>
           <tr>
             <td>401(k)/403(b) Balance #1</td>
@@ -302,10 +302,36 @@
         </div>
         <div class="section-body">
           <ul class="check-list">
-            <li><label><input type="checkbox" id="est_trust" name="est_trust"> Trust or Will?</label></li>
-            <li><label><input type="checkbox" id="est_poa" name="est_poa"> Powers of Attorney</label></li>
-            <li><label><input type="checkbox" id="est_living_will" name="est_living_will"> Living Will?</label></li>
-            <li><label><input type="checkbox" id="est_planning_done" name="est_planning_done"> Any retirement planning done?</label></li>
+            <li style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <span style="font-size:.9rem;">Trust or Will?</span>
+              <select id="est_trust" name="est_trust" style="width:100px;">
+                <option value="">—</option><option value="Yes">Yes</option><option value="No">No</option>
+              </select>
+            </li>
+            <li style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <span style="font-size:.9rem;">Powers of Attorney</span>
+              <select id="est_poa" name="est_poa" style="width:100px;">
+                <option value="">—</option><option value="Yes">Yes</option><option value="No">No</option>
+              </select>
+            </li>
+            <li style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <span style="font-size:.9rem;">Living Will?</span>
+              <select id="est_living_will" name="est_living_will" style="width:100px;">
+                <option value="">—</option><option value="Yes">Yes</option><option value="No">No</option>
+              </select>
+            </li>
+            <li style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <span style="font-size:.9rem;">Any retirement planning done?</span>
+              <select id="est_planning_done" name="est_planning_done" style="width:100px;">
+                <option value="">—</option><option value="Yes">Yes</option><option value="No">No</option>
+              </select>
+            </li>
+            <li style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <span style="font-size:.9rem;">Do you need updates to existing documents?</span>
+              <select id="est_needs_update" name="est_needs_update" style="width:100px;">
+                <option value="">—</option><option value="Yes">Yes</option><option value="No">No</option>
+              </select>
+            </li>
           </ul>
         </div>
       </div>
@@ -332,12 +358,12 @@
   const FORM_FIELDS = [
     'p_name','p_age','p_dob','s_name','s_age','s_dob','email','phone',
     'p_ss','s_ss','p_ss_collecting','s_ss_collecting','p_working','s_working',
-    'p_income_need','s_income_need',
+    'p_income_need',
     'primary_goal','p_retire_age','p_retire_year','s_retire_age','s_retire_year',
     'p_401k_1','s_401k_1','p_401k_2','s_401k_2','p_ira_1','s_ira_1','p_ira_2','s_ira_2',
     'p_inherited_ira','s_inherited_ira','p_pension','s_pension',
     'savings','investments','annuities','life_ins',
-    'est_trust','est_poa','est_living_will','est_planning_done'
+    'est_trust','est_poa','est_living_will','est_planning_done','est_needs_update'
   ];
 
   const STORAGE_KEY = 'rr_preappt';
@@ -520,7 +546,7 @@
     twoColRow('Social Security Benefit', fmtDollar(data.p_ss), fmtDollar(data.s_ss));
     twoColRow('Currently Collecting SS?', data.p_ss_collecting || '—', data.s_ss_collecting || '—');
     twoColRow('Working — Monthly Income', fmtDollar(data.p_working), fmtDollar(data.s_working));
-    twoColRow('Income Need in Retirement — Monthly', fmtDollar(data.p_income_need), fmtDollar(data.s_income_need), true);
+    row('Estimated Income Need in Retirement — Monthly', fmtDollar(data.p_income_need));
     twoColRow('401(k)/403(b) Balance #1', fmtDollar(data.p_401k_1), fmtDollar(data.s_401k_1));
     twoColRow('401(k)/403(b) Balance #2', fmtDollar(data.p_401k_2), fmtDollar(data.s_401k_2));
     twoColRow('IRA Balance #1', fmtDollar(data.p_ira_1), fmtDollar(data.s_ira_1));
@@ -548,12 +574,11 @@
     y -= 10;
 
     sectionHeader(5, 'Estate Planning');
-    const estItems = [];
-    if (data.est_trust) estItems.push('Trust or Will');
-    if (data.est_poa) estItems.push('Powers of Attorney');
-    if (data.est_living_will) estItems.push('Living Will');
-    if (data.est_planning_done) estItems.push('Retirement planning done');
-    row('Documents in Place', estItems.length ? estItems.join(', ') : 'None indicated');
+    row('Trust or Will?', data.est_trust || '—');
+    row('Powers of Attorney', data.est_poa || '—');
+    row('Living Will?', data.est_living_will || '—');
+    row('Any Retirement Planning Done?', data.est_planning_done || '—');
+    row('Documents Need Updates?', data.est_needs_update || '—');
 
     y -= 20;
     newPageIfNeeded(30);
