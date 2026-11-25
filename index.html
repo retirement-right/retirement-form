@@ -92,6 +92,11 @@
   #submit-btn:hover { background: #233358; }
   #submit-btn:disabled { opacity: .6; cursor: not-allowed; }
   #submit-msg { margin-top: 12px; font-size: .88rem; min-height: 20px; }
+  .secure-note { max-width: 460px; margin: 14px auto 0; font-size: .8rem; color: var(--muted); line-height: 1.5; }
+  .secure-note strong { color: var(--navy); }
+  .clear-row { margin-top: 10px; font-size: .78rem; color: var(--muted); }
+  .link-btn { background: none; border: none; padding: 0; font: inherit; color: var(--navy); text-decoration: underline; cursor: pointer; }
+  .link-btn.danger { color: var(--red); font-weight: 600; }
   #submit-msg.error { color: var(--red); font-weight: 600; }
   #submit-msg.success { color: var(--green); font-weight: 600; }
 
@@ -360,6 +365,13 @@
     <div class="submit-row">
       <button type="submit" id="submit-btn">📤 Submit to Advisor</button>
       <div id="submit-msg"></div>
+      <p class="secure-note">🔒 <strong>Your information is sent securely</strong> and is shared only with your Retirement Right advisors. We never ask for Social Security or account numbers.</p>
+      <div class="clear-row">
+        <span id="clear-ask">Using a shared computer? <button type="button" class="link-btn" id="clear-btn">Clear my answers</button></span>
+        <span id="clear-confirm" style="display:none;">Erase everything you've entered? <button type="button" class="link-btn danger" id="clear-yes">Yes, clear</button> · <button type="button" class="link-btn" id="clear-no">Cancel</button></span>
+        <span id="clear-done" style="display:none;">Your answers were cleared from this device.</span>
+      </div>
+      <p class="clear-row" style="margin-top:4px;">Unfinished answers are saved on this device for 24 hours.</p>
     </div>
   </form>
 </main>
@@ -417,10 +429,22 @@
     return data;
   }
 
+  const DRAFT_TTL_MS = 24 * 60 * 60 * 1000; // unfinished drafts expire after 24 hours
+
+  function saveDraft() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ savedAt: Date.now(), data: collectData() }));
+  }
+
   function restoreData() {
     try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      Object.keys(saved).forEach(id => {
+      const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+      if (!raw) return;
+      // Older drafts (saved before expiry existed) have no timestamp: keep them once, stamped as of now.
+      const saved = raw.savedAt ? raw.data : raw;
+      const savedAt = raw.savedAt || Date.now();
+      if (Date.now() - savedAt > DRAFT_TTL_MS) { localStorage.removeItem(STORAGE_KEY); return; }
+      if (!raw.savedAt) localStorage.setItem(STORAGE_KEY, JSON.stringify({ savedAt, data: saved }));
+      Object.keys(saved || {}).forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
         if (el.type === 'checkbox') el.checked = saved[id];
@@ -434,7 +458,7 @@
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(() => {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
+        saveDraft();
         indicator.textContent = 'Draft saved ✓';
         setTimeout(() => indicator.textContent = '', 2000);
       } catch(e) {}
@@ -442,6 +466,28 @@
   });
 
   restoreData();
+
+  // "Clear my answers" for shared computers (two-step so it isn't clicked by accident)
+  const clearAsk = document.getElementById('clear-ask');
+  const clearConfirm = document.getElementById('clear-confirm');
+  const clearDone = document.getElementById('clear-done');
+  function showClear(which) {
+    clearAsk.style.display = which === 'ask' ? '' : 'none';
+    clearConfirm.style.display = which === 'confirm' ? '' : 'none';
+    clearDone.style.display = which === 'done' ? '' : 'none';
+  }
+  document.getElementById('clear-btn').addEventListener('click', () => showClear('confirm'));
+  document.getElementById('clear-no').addEventListener('click', () => showClear('ask'));
+  document.getElementById('clear-yes').addEventListener('click', () => {
+    clearTimeout(saveTimeout);
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+    form.reset();
+    const msg = document.getElementById('submit-msg');
+    msg.className = ''; msg.textContent = '';
+    showClear('done');
+    setTimeout(() => showClear('ask'), 5000);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
   // If the browser blocks Submit because a box is out of range, say so plainly next to the button.
   form.addEventListener('invalid', (e) => {
