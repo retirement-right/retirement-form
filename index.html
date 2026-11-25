@@ -39,6 +39,20 @@
   .info-table td { padding: 6px 8px; vertical-align: middle; }
   .info-table td:first-child { font-size: .88rem; font-weight: 600; color: var(--navy); white-space: nowrap; }
 
+  /* Phones: stack Name / Age / Date of Birth so every box is full width and readable */
+  @media (max-width: 600px) {
+    .info-table, .info-table tbody, .info-table tr, .info-table td { display: block; width: 100%; }
+    .info-table tr:first-child { display: none; }
+    .info-table tr { margin-bottom: 14px; }
+    .info-table td { padding: 4px 0; }
+    .info-table td:first-child { font-size: .95rem; padding-top: 2px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+    .info-table td[data-label]::before { content: attr(data-label); display: block; font-size: .72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 3px; }
+    .info-table td[data-label] { display: inline-block; vertical-align: top; }
+    .info-table td.col-name { width: 100%; }
+    .info-table td.col-age { width: 30%; padding-right: 8px; }
+    .info-table td.col-dob { width: 70%; }
+  }
+
   .asset-table { width: 100%; border-collapse: collapse; }
   .asset-table th { font-size: .75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; padding: 8px 10px; text-align: left; border-bottom: 2px solid var(--border); }
   .asset-table th:not(:first-child) { text-align: center; color: var(--navy); }
@@ -125,15 +139,15 @@
           </tr>
           <tr>
             <td>Principal</td>
-            <td><input type="text" id="p_name" name="p_name" placeholder="Full name"></td>
-            <td><input type="number" id="p_age" name="p_age" placeholder="Age" min="0" max="120"></td>
-            <td><input type="date" id="p_dob" name="p_dob"></td>
+            <td class="col-name" data-label="Name"><input type="text" id="p_name" name="p_name" placeholder="Full name"></td>
+            <td class="col-age" data-label="Age"><input type="number" id="p_age" name="p_age" placeholder="Age" min="0" max="120"></td>
+            <td class="col-dob" data-label="Date of Birth"><input type="date" id="p_dob" name="p_dob"></td>
           </tr>
           <tr>
             <td>Spouse</td>
-            <td><input type="text" id="s_name" name="s_name" placeholder="Full name"></td>
-            <td><input type="number" id="s_age" name="s_age" placeholder="Age" min="0" max="120"></td>
-            <td><input type="date" id="s_dob" name="s_dob"></td>
+            <td class="col-name" data-label="Name"><input type="text" id="s_name" name="s_name" placeholder="Full name"></td>
+            <td class="col-age" data-label="Age"><input type="number" id="s_age" name="s_age" placeholder="Age" min="0" max="120"></td>
+            <td class="col-dob" data-label="Date of Birth"><input type="date" id="s_dob" name="s_dob"></td>
           </tr>
         </table>
         <div class="bottom-grid" style="margin-top:16px;margin-bottom:0;">
@@ -255,13 +269,13 @@
           </tr>
           <tr>
             <td>Target Retirement Age</td>
-            <td><input type="number" id="p_retire_age" name="p_retire_age" placeholder="e.g. 65" min="40" max="90" style="text-align:center;"></td>
-            <td><input type="number" id="s_retire_age" name="s_retire_age" placeholder="e.g. 65" min="40" max="90" style="text-align:center;"></td>
+            <td><input type="number" id="p_retire_age" name="p_retire_age" placeholder="e.g. 65" min="30" max="100" style="text-align:center;"></td>
+            <td><input type="number" id="s_retire_age" name="s_retire_age" placeholder="e.g. 65" min="30" max="100" style="text-align:center;"></td>
           </tr>
           <tr>
-            <td>Target Retirement Year</td>
-            <td><input type="number" id="p_retire_year" name="p_retire_year" placeholder="e.g. 2028" min="2024" max="2060" style="text-align:center;"></td>
-            <td><input type="number" id="s_retire_year" name="s_retire_year" placeholder="e.g. 2028" min="2024" max="2060" style="text-align:center;"></td>
+            <td>Target Retirement Year<br><small style="color:var(--muted);font-weight:400;">Already retired? Enter the year you retired.</small></td>
+            <td><input type="number" id="p_retire_year" name="p_retire_year" placeholder="e.g. 2028" min="1960" max="2075" style="text-align:center;"></td>
+            <td><input type="number" id="s_retire_year" name="s_retire_year" placeholder="e.g. 2028" min="1960" max="2075" style="text-align:center;"></td>
           </tr>
         </table>
       </div>
@@ -429,6 +443,18 @@
 
   restoreData();
 
+  // If the browser blocks Submit because a box is out of range, say so plainly next to the button.
+  form.addEventListener('invalid', (e) => {
+    const el = e.target;
+    const row = el.closest('tr');
+    const label = (row && row.cells[0] && row.cells[0].firstChild && row.cells[0].firstChild.textContent.trim())
+      || (el.closest('.field') && el.closest('.field').querySelector('label') && el.closest('.field').querySelector('label').textContent.trim())
+      || 'a field';
+    const msg = document.getElementById('submit-msg');
+    msg.className = 'error';
+    msg.textContent = 'Please check "' + label + '": ' + el.validationMessage;
+  }, true);
+
   document.querySelectorAll('.dollar-wrap input').forEach(inp => {
     inp.addEventListener('blur', () => {
       const raw = inp.value.replace(/[^0-9.]/g, '');
@@ -508,8 +534,9 @@
     page.drawText('Submitted ' + now.toLocaleString('en-US'), { x: margin, y, size: 9, font, color: muted });
     y -= 22;
 
-    function sectionHeader(num, title) {
-      newPageIfNeeded(40);
+    // rowsAfter: how many rows follow, so a short section is never split across pages
+    function sectionHeader(num, title, rowsAfter) {
+      newPageIfNeeded(40 + (rowsAfter || 0) * 18);
       page.drawRectangle({ x: margin, y: y - 20, width: pageW - margin * 2, height: 24, color: navy });
       page.drawCircle({ x: margin + 14, y: y - 8, size: 8, color: gold });
       page.drawText(String(num), { x: margin + 11, y: y - 11, size: 9, font: bold, color: rgb(0.1,0.1,0.1) });
@@ -565,7 +592,7 @@
     twoColRow('Social Security Benefit', fmtDollar(data.p_ss), fmtDollar(data.s_ss));
     twoColRow('Currently Collecting SS?', data.p_ss_collecting || '—', data.s_ss_collecting || '—');
     twoColRow('Working — Monthly Income', fmtDollar(data.p_working), fmtDollar(data.s_working));
-    row('Estimated Income Need in Retirement — Monthly', fmtDollar(data.p_income_need));
+    twoColRow('Est. Income Need in Retirement — Monthly', fmtDollar(data.p_income_need), '', true);
     twoColRow('401(k)/403(b) Balance #1', fmtDollar(data.p_401k_1), fmtDollar(data.s_401k_1));
     twoColRow('401(k)/403(b) Balance #2', fmtDollar(data.p_401k_2), fmtDollar(data.s_401k_2));
     twoColRow('IRA Balance #1', fmtDollar(data.p_ira_1), fmtDollar(data.s_ira_1));
@@ -574,7 +601,7 @@
     twoColRow('Pension — Monthly', fmtDollar(data.p_pension), fmtDollar(data.s_pension));
     y -= 10;
 
-    sectionHeader(3, 'Retirement Goals');
+    sectionHeader(3, 'Retirement Goals', 4);
     row('Primary Goal for This Meeting', data.primary_goal || '—');
     newPageIfNeeded(16);
     page.drawText('', { x: margin, y, size: 8, font });
@@ -585,14 +612,14 @@
     twoColRow('Target Retirement Year', data.p_retire_year || '—', data.s_retire_year || '—');
     y -= 10;
 
-    sectionHeader(4, 'Joint Liquid Assets');
+    sectionHeader(4, 'Joint Liquid Assets', 4);
     row('Bank / Savings', fmtDollar(data.savings));
     row('Investments / Brokerage', fmtDollar(data.investments));
     row('Annuities', fmtDollar(data.annuities));
     row('Life Insurance CSV', fmtDollar(data.life_ins));
     y -= 10;
 
-    sectionHeader(5, 'Estate Planning');
+    sectionHeader(5, 'Estate Planning', 5);
     row('Trust or Will?', data.est_trust || '—');
     row('Powers of Attorney', data.est_poa || '—');
     row('Living Will?', data.est_living_will || '—');
