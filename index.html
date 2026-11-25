@@ -337,6 +337,12 @@
       </div>
     </div>
 
+    <!-- Spam trap: hidden from people, bots fill it in -->
+    <div style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+      <label for="website">Leave this field empty</label>
+      <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+    </div>
+
     <div class="submit-row">
       <button type="submit" id="submit-btn">📤 Submit to Advisor</button>
       <div id="submit-msg"></div>
@@ -355,6 +361,10 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script>
+  // Google Apps Script web app that emails the PDF and logs to the Google Sheet.
+  // Paste the Web app URL from Deploy → Manage deployments here.
+  const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbygXrFzYxIHMT0rXo0kXAw2IeXltYC8sKezFb0lRK6UpJSWbYWLJakWwn3leYI2KMsNdw/exec';
+
   const FORM_FIELDS = [
     'p_name','p_age','p_dob','s_name','s_age','s_dob','email','phone',
     'p_ss','s_ss','p_ss_collecting','s_ss_collecting','p_working','s_working',
@@ -446,6 +456,15 @@
     const num = parseFloat(String(v).replace(/[^0-9.]/g, ''));
     if (isNaN(num)) return '—';
     return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  }
+
+  function uint8ToBase64(bytes) {
+    let binary = '';
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+    }
+    return btoa(binary);
   }
 
   function isFormBlank(data) {
@@ -619,22 +638,22 @@
     }
 
     try {
-      const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
       const clientName = (data.p_name || 'client').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
       const pdfFilename = `Pre-Appointment_${clientName}-${Date.now()}.pdf`;
 
-      const fd = new FormData();
-      fd.append('access_key', '78b2fdf7-168e-4b6b-b4b2-bed9d8569d89');
-      fd.append('subject', `Pre-Appointment Form — ${data.p_name || 'New Client'}`);
-      fd.append('from_name', 'Retirement Right Intake Form');
-      if (data.email) fd.append('email', data.email);
-      fd.append('message', `New Pre-Appointment form submitted by ${data.p_name || 'a client'}. Full details are in the attached PDF.`);
-      FORM_FIELDS.forEach(id => fd.append(id, data[id] === true ? 'Yes' : (data[id] === false ? '' : data[id])));
-      fd.append('attachment', pdfBlob, pdfFilename);
+      const payload = {
+        data,
+        pdfBase64: uint8ToBase64(pdfBytes),
+        pdfFilename,
+        website: (document.getElementById('website') || {}).value || ''
+      };
 
-      const res = await fetch('https://api.web3forms.com/submit', {
+      // text/plain avoids a CORS preflight, which Google Apps Script web apps don't answer.
+      const res = await fetch(SUBMIT_URL, {
         method: 'POST',
-        body: fd
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+        redirect: 'follow'
       });
 
       const rawText = await res.text();
